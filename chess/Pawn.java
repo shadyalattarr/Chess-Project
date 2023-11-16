@@ -6,12 +6,18 @@ public class Pawn extends Piece {
     }
 
     //need to create a get all valid moves method for each piece
-    public boolean isValidMove()
+    public boolean isValidMove(int myPosition,int nextPostion)
     {
         //to be done
         return true;
     }
     
+    @Override
+    boolean checkPath(int myPosition, int nextPostion) {
+        //idk
+        return false;
+    }
+
     @Override
     public String toString()
     {
@@ -19,4 +25,5 @@ public class Pawn extends Piece {
             return "p"; 
         return "P";  
     }
+    
 }

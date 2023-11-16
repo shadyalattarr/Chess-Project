@@ -1,16 +1,13 @@
 abstract public class Piece {
     private int color;//0 black and 1 white //-1 invlaid
     
-    abstract boolean isValidMove();//a move that puts the king in danger
+    abstract boolean isValidMove(int myPosition,int nextPostion);//a move that puts the king in danger
     //need to create a get all valid moves method for each piece
     //tye is string? array of string more like a list to be dynamic?
 
     //tostring shuld be deleted ith
 
-    //abstract int getPosition();
-    //abstract void setPosition(int position);
-    // nn for setositon from piece... just in square  . getpiece
-    //dellete when agreed
+    abstract boolean checkPath(int myPosition,int nextPostion);
 
     public void setColor(int color)
     {
