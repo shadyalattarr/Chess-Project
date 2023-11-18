@@ -1,3 +1,4 @@
+package com.company.chesscore;
 public class BoardSquare {
     private Piece piece;
     private int position;

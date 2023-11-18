@@ -1,3 +1,4 @@
+package com.company.chesscore;
 abstract public class Piece {
     private int color;//0 black and 1 white //-1 invlaid
     

@@ -1,9 +1,12 @@
+package com.company.chesscore;
+
 public class Board {
-    public BoardSquare squares[][] = new BoardSquare[8][8];
+    public static BoardSquare squares[][] ;
     //left public for testing?
     public Board()
     {
         //creating board
+        squares = new BoardSquare[8][8];
         int r,c;
         for(int i = 0;i<64;i++)
         {
@@ -85,6 +88,11 @@ public class Board {
                     squares[r][c] = new BoardSquare(new EmptySquare(), i);
             }
         }
+    }
+    public static  BoardSquare getBoardSquare(int nextPostion) {
+        // TODO Auto-generated method stub
+
+       return squares[nextPostion/8][nextPostion%8];
     }
 
 

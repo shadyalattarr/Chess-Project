@@ -1,3 +1,4 @@
+package com.company.chesscore;
 public class EmptySquare extends Piece{
     @Override
     public String toString()

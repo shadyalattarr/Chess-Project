@@ -1,3 +1,4 @@
+package com.company.chesscore;
 public class Pawn extends Piece {
     
     public Pawn(int color)
