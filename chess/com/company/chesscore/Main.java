@@ -26,8 +26,15 @@ public class Main {
         //testing black queen getall
         /*Piece blackQueen = Board.getBoardSquare(3).getPiece();
         validMoves = blackQueen.getAllValidMovesFromPiece(32);
-        printArrayList(validMoves);*?
-
+        printArrayList(validMoves);*/
+        //testing white bishop getall
+        /*Piece whiteBishop = Board.getBoardSquare(58).getPiece();
+        validMoves = whiteBishop.getAllValidMovesFromPiece(39);
+        printArrayList(validMoves);*/
+        //tesign black rook getall
+        /*Piece blackRook = Board.getBoardSquare(7).getPiece();
+        validMoves = blackRook.getAllValidMovesFromPiece(27);
+        printArrayList(validMoves);*/
         //testing king 59 white movements
         /* 
         Piece whiteKing = board.squares[7][3].getPiece();

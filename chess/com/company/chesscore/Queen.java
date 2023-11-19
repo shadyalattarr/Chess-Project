@@ -85,6 +85,7 @@ public class Queen extends Piece {
                         throw new IllegalArgumentException(); 
                     while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
                     {
+                        //need to check if king is safe
                         validMoves.add(Board.createMoveString(r, c, newR, newC));
                         temp++;
                         newR = r+ temp*i;
@@ -98,6 +99,7 @@ public class Queen extends Piece {
                         != this.getColorNum())
                     {
                         //oppo color, can capture
+                        //need to check if king is safe
                         validMoves.add(Board.createMoveString(r, c, newR, newC));
                     }
                         // end of possible path here, change path

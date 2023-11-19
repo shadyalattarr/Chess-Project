@@ -64,7 +64,49 @@ public class Bishop extends Piece {
 
     @Override
     public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllValidMovesFromPiece'");
+        ArrayList<String> validMoves = new ArrayList<String>();
+        int r = myPosition/8;
+        int c = myPosition%8;
+        int newR,newC;
+        int temp = 1;
+        for(int i = -1;i<=1;i+=2)
+        {
+            for(int j= -1;j<=1;j+=2)//i and j for "direction"
+            {
+                try{
+                    temp=1;
+                    newR = r+temp*i;
+                    newC = c+ temp*j;
+                    if(Board.isIllegal(newR, newC))//reach end of board
+                        throw new IllegalArgumentException(); 
+                    while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
+                    {
+                        //need to check if king is safe
+                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        temp++;
+                        newR = r+ temp*i;
+                        newC =c+ temp*j;
+                        if(Board.isIllegal(newR, newC))//reach end of board
+                            throw new IllegalArgumentException();
+                         
+                    }
+                    //reaching this means we hit a piece @newRnewC
+                    if(Board.getBoardSquare(Board.getIntPosition(newR, newC)).getPiece().getColorNum()
+                        != this.getColorNum())
+                    {
+                        //oppo color, can capture
+                        //need to check if king is safe
+                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                    }
+                        // end of possible path here, change path
+                }
+                catch(IllegalArgumentException e)
+                {
+                    //reached end of board
+                }
+            }
+        }
+
+        return validMoves;
     }
 }
