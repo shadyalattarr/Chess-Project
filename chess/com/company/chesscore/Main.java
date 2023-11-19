@@ -23,6 +23,12 @@ public class Main {
         validMoves = whiteKing.getAllValidMovesFromPiece(31);
         printArrayList(validMoves);
 */
+
+        //tsting white knightgetall
+        /*Piece whiteKnight = Board.getBoardSquare(62).getPiece();
+        validMoves = whiteKnight.getAllValidMovesFromPiece(1);
+        printArrayList(validMoves); */
+
         //testing black queen getall
         /*Piece blackQueen = Board.getBoardSquare(3).getPiece();
         validMoves = blackQueen.getAllValidMovesFromPiece(32);

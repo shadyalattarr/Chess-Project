@@ -23,7 +23,7 @@ public class Knight extends Piece {
     @Override
     boolean checkPath(int myPosition, int nextPostion) {
         BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
-        if (nextBoardSquare.getPiece().getColor().equals(getColor()))
+        if (nextBoardSquare.getPiece().getColor().equals(this.getColor()))
             return false;
         else
             return true;
@@ -39,8 +39,42 @@ public class Knight extends Piece {
 
     @Override
     public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllValidMovesFromPiece'");
+        ArrayList<String> validMoves = new ArrayList<String>();
+        int r = myPosition/8;
+        int c = myPosition%8;
+        int newR,newC;
+        int rowFactor,colFactor;
+        for(int rc = 0;rc<=1;rc++)
+            {   
+                if(rc==0)
+                {   
+                    rowFactor = 1; colFactor = 2;
+                }
+                else
+                {
+                    rowFactor = 2; colFactor =1;
+                }
+                for(int i =-1;i<=1;i+=2)
+                {
+                    for(int j=-1;j<=1;j+=2)
+                    {  
+                        newR = r+i*rowFactor;
+                        newC = c+j*colFactor;
+                        try{//try catch lazem in loop cuz if out of lop it ends
+                            if(Board.isIllegal(newR, newC))
+                                throw new IllegalArgumentException();
+                            
+                            if(this.checkPath(myPosition, Board.getIntPosition(newR,newC)))//need to add iskingsafe
+                                validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        }
+                        catch(IllegalArgumentException e)
+                        {
+                            //exited board
+                        }
+                    }
+                }
+            }        
+        return validMoves;
     }
 
 }
