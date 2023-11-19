@@ -57,8 +57,15 @@ public class King extends Piece {
                     if(nextPosColor != this.getColorNum())//if not same color
                     {
                         //valid move
-                        //check if king safe el 2awel
-                        validMoves.add(Board.createMoveString(r,c, r+rowChange, c+colChange));
+                        if(Board.isMyKingSafe(nextPos, this.getColorNum()))
+                        {
+                            validMoves.add(Board.createMoveString(r,c, r+rowChange, c+colChange));
+                            System.out.println("king safe");
+                        }
+                        else
+                        {
+                            System.out.println("king is NOT safe");
+                        }
                     }
                 }
             }

@@ -17,6 +17,17 @@ public class Main {
 
 
         ArrayList<String> validMoves = new ArrayList<String>();
+        //testing if white king safe 
+        Piece whiteKing = board.squares[7][3].getPiece();
+        System.out.println("from 31");
+        Board.getBoardSquare(29).setPiece(board.getBoardSquare(5).getPiece());//set as b bishop
+        Board.getBoardSquare(38).setPiece(board.getBoardSquare(6).getPiece());//set as b bishop
+        validMoves = whiteKing.getAllValidMovesFromPiece(43);
+        printArrayList(validMoves);
+
+        
+
+
         //testing white king getall validmoves
        /*  Piece whiteKing = board.squares[7][3].getPiece();
         System.out.println("from 63");

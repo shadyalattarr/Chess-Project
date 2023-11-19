@@ -1,6 +1,7 @@
 package com.company.chesscore;
 
 public class Board {
+    //wanna make squaes private and make initialise board method
     public static BoardSquare squares[][] ;
     //left public for testing?
     public Board()
@@ -127,5 +128,158 @@ public class Board {
     public static int getRowNumber(char row)
     {
         return 8-(int)row;
+    }
+
+    public static boolean isMyKingSafe(int kingPosition,int myColor)
+    {
+        int r = kingPosition/8;
+        int c = kingPosition%8;
+        int newR,newC;
+        int temp;
+        //checking diagonals: bishop and queen
+        for(int i = -1;i<=1;i+=2)
+        {
+            for(int j= -1;j<=1;j+=2)//i and j for "direction"
+            {
+                try{
+                    temp=1;
+                    newR = r+temp*i;
+                    newC = c+ temp*j;
+                    if(Board.isIllegal(newR, newC))//reach end of board
+                        throw new IllegalArgumentException(); 
+                    //next while loop keep going util you find apiece or hit end
+                    while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
+                    {
+                        temp++;
+                        newR = r+ temp*i;
+                        newC =c+ temp*j;
+                        if(Board.isIllegal(newR, newC))//reach end of board
+                            throw new IllegalArgumentException();
+                    }
+                    //reaching this means hit a piece
+                    //if bishop or queen and their color is not mine----they enemy
+                    if((Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Bishop
+                     || Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Queen) &&
+                     Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
+                        {System.out.println("queen or bishop strikes");return false;}
+                }
+                catch(IllegalArgumentException e)
+                {
+                    //end board
+                }
+            }
+        }
+        //checking str8s:rook ad queen
+        for(int i = -1;i<=1;i++)
+        {
+            for(int j= -1;j<=1;j++)//i and j for "direction"
+            {
+                if(!((i==0 && j!=0) || (i!=0 &&j==0)))//ixor//lazem one of them 0-- 01 10 // if none is 0 so diag. 
+                    continue;//no movement
+                try{
+                    temp=1;
+                    newR = r+temp*i;
+                    newC = c+ temp*j;
+                    if(Board.isIllegal(newR, newC))//reach end of board
+                        throw new IllegalArgumentException(); 
+                    while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
+                    {
+                        temp++;
+                        newR = r+ temp*i;
+                        newC =c+ temp*j;
+                        if(Board.isIllegal(newR, newC))//reach end of board
+                            throw new IllegalArgumentException();     
+                    }
+                    //reaching this means we hit a piece @newRnewC
+                    //if rook or queen and their color is not mine----they enemy
+                    if((Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Rook
+                     || Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Queen) &&
+                     Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
+                        {System.out.println("rook or bishop strikes");return false;}
+                    // end of possible path here, change path
+                }
+                catch(IllegalArgumentException e)
+                {
+                    //reached end of board
+                }
+            }
+        }
+        //checking Ls: knight
+        int rowFactor,colFactor;
+        for(int rc = 0;rc<=1;rc++)
+        {   
+            if(rc==0)
+            {   
+                rowFactor = 1; colFactor = 2;
+            }
+            else
+            {
+                rowFactor = 2; colFactor =1;
+            }
+            for(int i =-1;i<=1;i+=2)
+            {
+                for(int j=-1;j<=1;j+=2)
+                {  
+                    newR = r+i*rowFactor;
+                    newC = c+j*colFactor;
+                    try{//try catch lazem in loop cuz if out of lop it ends
+                        if(Board.isIllegal(newR, newC))
+                            throw new IllegalArgumentException();
+                        //not invalid square
+                        //check if its opposite knight
+                        //if knight found there and his color is not ,ine we in danger
+                        if(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Knight &&
+                            Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
+                                {System.out.println("knight strikes");return false;}
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                        //exited board
+                    }
+                }
+            }
+        }        
+        //checking pawn attacks
+        newR = (myColor == 0)? r+1:r-1;//color is 0 black queen.. pawns gonna be below her.. increment row
+        //2 col configs
+        for(int i=-1;i<=1;i+=2)
+        {
+            try{
+                newC = c+i;
+                if(isIllegal(newR, newC))
+                    throw new IllegalArgumentException();
+                //it is a right sqr
+                //if pawn found and opposite color
+                if(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof Pawn &&
+                    Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
+                        {System.out.println("pawn strikes");return false;}
+            }
+            catch(IllegalArgumentException e)
+            {
+                //beyond
+            }
+        }
+        //checking arond by 1 from king enemy
+        for(int i=-1;i<=1;i++)
+        {
+            for(int j=-1;j<=1;j++)
+                if(i!=0 || j!=0)//false only when both 0
+                    try{
+                        newR = r+i;
+                        newC = c+j;
+                        if(isIllegal(newR, newC))
+                            throw new IllegalArgumentException();
+                        if(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece() instanceof King &&
+                            Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
+                                {System.out.println("king strikes");return false;}
+                    }
+                    catch(IllegalArgumentException e)
+                    {
+                        //out f bounds
+                    }
+        }
+        
+        
+        return true;
     }
 }
