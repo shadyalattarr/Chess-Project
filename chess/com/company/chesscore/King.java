@@ -1,5 +1,7 @@
 package com.company.chesscore;
 
+import java.util.ArrayList;
+
 public class King extends Piece {
 
     public King(int color) {
@@ -7,6 +9,7 @@ public class King extends Piece {
     }
 
     // need to create a get all valid moves method for each piece
+    @Override
     public boolean isValidMove(int myPosition, int nextPostion) {
         int myRow = myPosition / 8;
         int myCol = myPosition % 8;
@@ -20,18 +23,54 @@ public class King extends Piece {
         return false;
     }
 
-    @Override // can we have the board
-              // here????????????????????????????????????????????????????/
+    @Override
     boolean checkPath(int myPosition, int nextPostion) {
         BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
-        if (nextBoardSquare.getPiece().getColor().equals(getColor()))
+        if (nextBoardSquare.getPiece().getColor().equals(this.getColor()))//if same color piece
             return false;
-
         else
             return true;
 
     }
 
+    @Override
+    public ArrayList<String> getAllValidMovesFromPiece(int myPosition)
+    {
+        ArrayList<String> validMoves = new ArrayList<String>();
+        int r = myPosition/8;
+        int c = myPosition%8;
+        int rowChange,colChange,newR,newC;
+        //still didnt include castling
+        for(int i =0;i<9;i++)//for 9 moves possible
+        {
+            try{
+                if(i!=4)//4 is no move
+                {
+                    newR = i/3;
+                    newC = i%3;
+                    rowChange = newR-1;
+                    colChange = newC-1;
+                    if(Board.isIllegal(r+rowChange, c+colChange))
+                        throw new IllegalArgumentException();
+                    int nextPos = Board.getIntPosition(r+rowChange, c+colChange);
+                    int nextPosColor = Board.getBoardSquare(nextPos).getPiece().getColorNum();
+                    if(nextPosColor != this.getColorNum())//if not same color
+                    {
+                        //valid move
+                        //check if king safe el 2awel
+                        validMoves.add(Board.createMoveString(r,c, r+rowChange, c+colChange));
+                    }
+                }
+            }
+            catch(IllegalArgumentException e)
+            {
+                //System.out.println("illegal position");
+            }
+        }
+
+
+        return validMoves;
+    }
     @Override
     public String toString() {
         if (getColor().equals("Black"))

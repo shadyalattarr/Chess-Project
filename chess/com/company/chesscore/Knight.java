@@ -1,14 +1,14 @@
 package com.company.chesscore;
 
+import java.util.ArrayList;
+
 public class Knight extends Piece {
 
     public Knight(int color) {
         setColor(color);
     }
 
-    // need to create a get all valid moves method for each piece
     public boolean isValidMove(int myPosition, int nextPostion) {
-        // to be done
         int myRow = myPosition / 8;
         int myCol = myPosition % 8;
         int nextRow = nextPostion / 8;
@@ -25,7 +25,6 @@ public class Knight extends Piece {
         BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
         if (nextBoardSquare.getPiece().getColor().equals(getColor()))
             return false;
-        
         else
             return true;
 
@@ -36,6 +35,12 @@ public class Knight extends Piece {
         if (getColor().equals("Black"))
             return "k";
         return "K";
+    }
+
+    @Override
+    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllValidMovesFromPiece'");
     }
 
 }

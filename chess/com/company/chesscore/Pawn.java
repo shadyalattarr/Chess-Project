@@ -1,4 +1,7 @@
 package com.company.chesscore;
+
+import java.util.ArrayList;
+
 public class Pawn extends Piece {
     
     public Pawn(int color)
@@ -25,6 +28,12 @@ public class Pawn extends Piece {
         if(getColor().equals("Black"))
             return "p"; 
         return "P";  
+    }
+
+    @Override
+    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllValidMovesFromPiece'");
     }
     
 }

@@ -1,5 +1,7 @@
 package com.company.chesscore;
 
+import java.util.ArrayList;
+
 public class Bishop extends Piece {
 
     public Bishop(int color) {
@@ -26,29 +28,31 @@ public class Bishop extends Piece {
         int myCol = myPosition % 8;
         int nextRow = nextPosition / 8;
         int nextCol = nextPosition % 8;
-        int rowChange = (nextRow > myRow) ? 1 : -1;
-        int colChange = (nextCol > myCol) ? 1 : -1;
-        EmptySquare emptySquare = new EmptySquare();
+        int rowChange = (nextRow > myRow) ? 1 : -1;//row change is up -1 down 1
+        int colChange = (nextCol > myCol) ? 1 : -1;//col change is right 1 left -1
 
+        //current square checking
         int currentRow = myRow + rowChange;
         int currentCol = myCol + colChange;
         // checking if there is a piece in the path
-        while (currentRow != nextRow || currentCol != nextCol) {
+        while (currentRow != nextRow && currentCol != nextCol) {//till we reach our square
             BoardSquare nextBoardSquare = Board.getBoardSquare(currentRow * 8 + currentCol);
-            if (nextBoardSquare.getPiece() != emptySquare) {
+            
+            //System.out.println(currentRow * 8 + currentCol +" "+ nextBoardSquare.getPiece());
+            
+            if (nextBoardSquare.getPiece().getColorNum() != -1) {//if we meet a piece in path its over
                 return false;
             }
             currentRow += rowChange;
             currentCol += colChange;
         }
-
-        // checking if the sqaure is empty
+        //System.out.println("done with path");
+        // checking if the sqaure destination is empty
         BoardSquare nextBoardSquare = Board.getBoardSquare(nextPosition);
         if (nextBoardSquare.getPiece().getColor().equals(getColor()))
-            return false;
-
+            return false;//f in destiantion is of my own i cant go there
         else
-            return true;
+            return true;//if its empty or enemty aight
     }
 
     @Override
@@ -56,5 +60,11 @@ public class Bishop extends Piece {
         if (getColor().equals("Black"))
             return "b";
         return "B";
+    }
+
+    @Override
+    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAllValidMovesFromPiece'");
     }
 }

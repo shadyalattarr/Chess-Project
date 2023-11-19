@@ -89,11 +89,43 @@ public class Board {
             }
         }
     }
-    public static  BoardSquare getBoardSquare(int nextPostion) {
-        // TODO Auto-generated method stub
 
+    public static String createMoveString(int myRow,int myCol,int nextRow,int nextCol)
+    {
+        return columnConvert(myCol) +""+ rowConvert(myRow) + "," 
+        + columnConvert(nextCol) + rowConvert(nextRow);
+    } 
+    public static boolean isIllegal(int row,int col) 
+    {
+        if(row <0 || row>7 || col<0 || col>7)
+            return true;
+        return false;
+    }   
+    public static BoardSquare getBoardSquare(int nextPostion) {
        return squares[nextPostion/8][nextPostion%8];
     }
 
+    public static int getIntPosition(int row,int col)
+    {
+        return 8*row + col;
+    }
+    public static char columnConvert(int myColumn) 
+    {
+        return (char)(97+myColumn);
+    }
 
+    public static char rowConvert(int myRow)
+    {
+        return (char)(56-myRow);//56 ascii of 8
+    }
+
+    public static int getColumnNumber(char column)
+    {
+        return (int)column-97;
+    }
+
+    public static int getRowNumber(char row)
+    {
+        return 8-(int)row;
+    }
 }

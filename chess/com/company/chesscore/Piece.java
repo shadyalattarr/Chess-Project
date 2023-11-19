@@ -1,4 +1,7 @@
 package com.company.chesscore;
+
+import java.util.ArrayList;
+
 abstract public class Piece {
     private int color;//0 black and 1 white //-1 invlaid
     
@@ -15,9 +18,12 @@ abstract public class Piece {
         if(color == 0 || color == 1)
             this.color = color;
         else
-            this.color = -1;
+            this.color = -1;//empty square
     }
-
+    public int getColorNum()
+    {
+        return this.color;
+    }
     public String getColor()
     {
         return translateColor(this.color);
@@ -29,6 +35,9 @@ abstract public class Piece {
             return "White";
         else if(color == 0)
             return "Black";//else is 0
-        return "Invalid color";//need to handle using try catch mn el setcolor?
+        return "Empty Square";
     }
+
+
+    abstract public ArrayList<String> getAllValidMovesFromPiece(int myPosition);
 }
