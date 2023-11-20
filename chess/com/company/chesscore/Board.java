@@ -52,11 +52,11 @@ public class Board {
                     //black king
                     squares[r][c] = new BoardSquare(new King(0), i);
                     break;
-                case(59):
+                case(60):
                     //white king
                     squares[r][c] = new BoardSquare(new King(1), i);
                     break;
-                case(60):
+                case(59):
                     //white queen
                     squares[r][c] = new BoardSquare(new Queen(1), i);
                     break;

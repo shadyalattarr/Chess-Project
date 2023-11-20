@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 abstract public class Piece {
     private int color;//0 black and 1 white //-1 invlaid
+    public boolean firstMove= true;
     
     abstract boolean isValidMove(int myPosition,int nextPostion);//a move that puts the king in danger
     //need to create a get all valid moves method for each piece

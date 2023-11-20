@@ -3,9 +3,14 @@ package com.company.chesscore;
 import java.util.ArrayList;
 
 public class King extends Piece {
+ 
 
     public King(int color) {
         setColor(color);
+    }
+    public void setFirstMove(boolean firstMove)
+    {
+        this.firstMove = firstMove;
     }
 
     // need to create a get all valid moves method for each piece
@@ -18,6 +23,7 @@ public class King extends Piece {
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
         if (rowDifference <= 1 && colDifference <= 1) {
+            firstMove = false;
             return true;// 7araka sa7
         }
         return false;
@@ -31,6 +37,19 @@ public class King extends Piece {
         else
             return true;
 
+    }
+    //needs to check this also in the get all valid moves
+    public boolean isCastleMove(int myPosition, int nextPostion) {
+        int myRow = myPosition / 8;
+        int myCol = myPosition % 8;
+        int nextRow = nextPostion / 8;
+        int nextCol = nextPostion % 8;
+        int rowDifference = (int) Math.abs(myRow - nextRow);
+        int colDifference = (int) Math.abs(myCol - nextCol);
+        if (rowDifference == 0 && colDifference == 2 && firstMove) {
+            return true;
+        }
+        return false;
     }
 
     @Override
