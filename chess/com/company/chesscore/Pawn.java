@@ -21,14 +21,16 @@ public class Pawn extends Piece {
        
         if (getColor().equals("Black")) {
             if (firstMove) {
-
+                //can go down 2 or 1 or diags
+                //nn check isillegal cuz first move
                 if (((rowDifference == -2 && colDifference == 0)
                         && (Board.getBoardSquare(nextPostion - 8).getPiece().getColor().equals("Empty Square")))
                         || ((rowDifference == -1 && colDifference == 0))) {
-                  //  firstMove = false;
+                    firstMove = false;
                     return true;
                 }
             }
+            //not first move
             if ((rowDifference == -1 && colDifference == 0)) {
                 return true;
             } else if ((rowDifference == -1 && colDifference == 1)
@@ -37,7 +39,6 @@ public class Pawn extends Piece {
             } else if ((rowDifference == -1 && colDifference == -1)
                     && (Board.getBoardSquare(nextPostion).getPiece().getColor().equals("White"))) {// SAME GOSE HERE
                 return true;
-
             } else {
                 return false;
             }
@@ -80,19 +81,20 @@ public class Pawn extends Piece {
         int rowDifference = myRow - nextRow;
         BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
         if (colDifference == 0) {
+            //fwd
             if (nextBoardSquare.getPiece().getColor().equals("Empty Square"))// it can move only when its empty
-                if (rowDifference > 1) {
+                if (rowDifference > 1) {//going down.. a black pawn fwd
                     if (Board.getBoardSquare(nextPostion + 8).getPiece().getColor().equals("Empty Square"))
-                        return true;
+                        return true;//black pawn move fwd 2
                 } else if (rowDifference < -1) {
                     if (Board.getBoardSquare(nextPostion - 8).getPiece().getColor().equals("Empty Square"))
-                        return true;
+                        return true;//pawn move fwd 2 as white
                 } else
-                    return true;
+                    return true;//pawn move fwd 1
             else
                 return false;
 
-        } else {
+        } else if(colDifference == 1 || colDifference == -1){//diags to eat
             if (nextBoardSquare.getPiece().getColor().equals(this.getColor())
                     || nextBoardSquare.getPiece().getColor().equals("Empty Square"))// if same color piece or empty
                                                                                     // square
@@ -125,21 +127,20 @@ public class Pawn extends Piece {
         //         || Board.isIllegal(r - 1, c - 1);
 
         if (firstMove) {
-
-            if (getColorNum() == 0) {
+            //nn check illegal
+            if (getColorNum() == 0) {//blck can go down 1 or 2 or diags eat
                 if (Board.getBoardSquare(myPosition + 8).getPiece().getColor().equals("Empty Square")) {
                     if (Board.getBoardSquare(myPosition + 16).getPiece().getColor().equals("Empty Square"))
-                        validMoves.add(Board.createMoveString(r, c, r + 2, c));
-                    validMoves.add(Board.createMoveString(r, c, r + 1, c));
+                        validMoves.add(Board.createMoveString(r, c, r + 2, c));//2 fwd
+                    validMoves.add(Board.createMoveString(r, c, r + 1, c));//1 fwd
                 }
-                if (Board.getBoardSquare(myPosition + 7).getPiece().getColor().equals("White") && (c > 0))
+                if (Board.getBoardSquare(myPosition + 7).getPiece().getColor().equals("White") && (c > 0))//checkin left diag except 0
                     validMoves.add(Board.createMoveString(r, c, r + 1, c - 1));
-                if (Board.getBoardSquare(myPosition + 9).getPiece().getColor().equals("White") && (c < 7))
+                if (Board.getBoardSquare(myPosition + 9).getPiece().getColor().equals("White") && (c < 7))//checkig right diag excet 7
                     validMoves.add(Board.createMoveString(r, c, r + 1, c + 1));
             } else {
-
+                //wjite first move go up
                 if (Board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square")) {
-
                     {
 
                         if (Board.getBoardSquare(myPosition - 16).getPiece().getColor().equals("Empty Square"))
@@ -153,9 +154,9 @@ public class Pawn extends Piece {
                 }
 
             }
-        } else {
-            if (getColorNum() == 0 && (r < 7)) {
-
+        } else {//not first move
+            if (getColorNum() == 0 && (r < 7)) {//black and not in end// if in end pawn promo
+                //can have pawn promo here-- eads to it
                 if (Board.getBoardSquare(myPosition + 8).getPiece().getColor().equals("Empty Square")) {
                     validMoves.add(Board.createMoveString(r, c, r + 1, c));
                 }
@@ -163,7 +164,7 @@ public class Pawn extends Piece {
                     validMoves.add(Board.createMoveString(r, c, r + 1, c - 1));
                 if (Board.getBoardSquare(myPosition + 9).getPiece().getColor().equals("White") && (c < 7))
                     validMoves.add(Board.createMoveString(r, c, r + 1, c + 1));
-            } else {
+            } else {//will neer have apawn in black and at bottom
                 if (r > 0) {
                     if (Board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square"))
                         validMoves.add(Board.createMoveString(r, c, r - 1, c));

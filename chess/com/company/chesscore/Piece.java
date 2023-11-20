@@ -41,4 +41,9 @@ abstract public class Piece {
 
 
     abstract public ArrayList<String> getAllValidMovesFromPiece(int myPosition);
+
+    public void setFirstMove(boolean isFirstMove)
+    {
+        this.firstMove = isFirstMove;
+    }
 }

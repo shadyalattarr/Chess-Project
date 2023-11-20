@@ -40,13 +40,17 @@ public class King extends Piece {
     }
     //needs to check this also in the get all valid moves
     public boolean isCastleMove(int myPosition, int nextPostion) {
+        //tis called when you a king and you ging to a rook
         int myRow = myPosition / 8;
         int myCol = myPosition % 8;
         int nextRow = nextPostion / 8;
         int nextCol = nextPostion % 8;
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
-        if (rowDifference == 0 && colDifference == 2 && firstMove) {
+        boolean isRookFirstMove = Board.getBoardSquare(nextPostion).getPiece().firstMove;
+        if (rowDifference == 0 && colDifference >= 2 && firstMove && isRookFirstMove) {//need check rook first move?
+            this.setFirstMove(false);
+            Board.getBoardSquare(nextPostion).getPiece().setFirstMove(false);
             return true;
         }
         return false;

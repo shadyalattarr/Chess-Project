@@ -114,12 +114,20 @@ public class Board {
     {
         return (char)(97+myColumn);
     }
-
+    
     public static char rowConvert(int myRow)
     {
         return (char)(56-myRow);//56 ascii of 8
     }
-
+    public static void printBoard()
+    {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                System.out.print(8 * i + j + ":" + Board.getBoardSquare(getIntPosition(i,j)).getPiece() + "\t");
+            }
+            System.out.println();
+        }
+    }
     public static int getColumnNumber(char column)
     {
         return (int)column-97;
@@ -127,9 +135,13 @@ public class Board {
 
     public static int getRowNumber(char row)
     {
-        return 8-(int)row;
+        return (8-(row-48));
     }
-
+    public void movePiece(int fromPosition,int toPosition)
+    {
+        Board.getBoardSquare(toPosition).setPiece(Board.getBoardSquare(fromPosition).getPiece());
+        Board.getBoardSquare(fromPosition).setPiece(new EmptySquare());
+    }
     public static boolean isMyKingSafe(int kingPosition,int myColor)
     {
         int r = kingPosition/8;

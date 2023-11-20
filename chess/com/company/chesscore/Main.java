@@ -5,10 +5,25 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         // sum things are static we can call them directly by Board.getBoardSquare(0)
+        ChessGame game1 = new ChessGame();
+        Board.printBoard();
+        //game1.gameOn=false;
+        game1.startGame();
+
+
+
+        /* 
         System.out.println("----Chess Board----");
         Board board = new Board();// makes no sense how we dealing wih it
         // kolo 2awel 7arf but king Aa and WHITE black
         ArrayList<String> validMoves = new ArrayList<String>();
+        */    
+        
+        
+        
+        
+        
+        
         // white pawn test
         // Piece whitePawn = board.squares[6][3].getPiece();
         // System.out.println("from 51");
@@ -31,13 +46,13 @@ public class Main {
         // validMoves = blackPawn.getAllValidMovesFromPiece(11);
         // System.out.println(blackPawn.checkPath(11, 27));
         // printArrayList(validMoves);
-        for (int i = 0; i < 8; i++) {
+  /*       for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 System.out.print(8 * i + j + ":" + board.squares[i][j].getPiece() + "\t");
             }
             System.out.println();
         }
-
+*/
         // testing if white king safe
         // Piece whiteKing = board.squares[7][3].getPiece();
         // System.out.println("from 31");

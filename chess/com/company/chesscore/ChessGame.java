@@ -1,23 +1,216 @@
 package com.company.chesscore;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ChessGame {
     Board board;
     int player;
+    boolean gameOn;
+    int whiteKingPos;
+    int blackKingPos;
 
     ChessGame() {
         this.board = new Board();
         this.player = 1;// white starts
+        this.gameOn = true;
+        whiteKingPos = 60;
+        blackKingPos = 4;
+    }
+    public Piece promotionPiece(char stringPiece)
+    {
+        Piece newPiece;
+        switch (stringPiece) {
+            case 'K':
+                newPiece = new Knight(player);
+                System.out.println("promoted to knight");
+                break;
+            case 'B':
+                newPiece = new Bishop(player);
+                System.out.println("promoted to bishop");
+                break;
+            case 'R':
+                newPiece = new Rook(player);
+                System.out.println("promoted to rook");
+                break;
+            case 'Q':
+                newPiece = new Queen(player);
+                System.out.println("promoted to queen");
+                break;
+            default:
+                System.out.println("no promotion lmfao");
+                newPiece = new EmptySquare();//if we sent an empty square then no promo
+                break;
+        }
+        
+        return newPiece;
+    }
+    public ArrayList<String> getMovesFromFile(String file)
+    {
+        ArrayList<String> inputMoves = new ArrayList<String>();
+        File fileName = new File(file);
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(fileName));    
+            String line = br.readLine();
+            while (line != null) {
+                inputMoves.add(line);
+                line = br.readLine();
+            }
+            br.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("filenotfound");
+        } catch(IOException e)
+        {
+            e.printStackTrace();
+        } 
+        return inputMoves;
+    }
+    public void writeToFile(String event){
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Output.txt"),true));
+            bw.write(event);
+            bw.write("\n");
+            bw.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    public boolean isPieceMyColor(int fromPosition)
+    {
+        return Board.getBoardSquare(fromPosition).getPiece().getColorNum() == player;//player 0 black and 1 white..
+        //we check before this that we are not accessing an empty square
+    }
+    public void startGame()
+    {
+        int otherPlayer;
+        ArrayList<String> inputMoves = getMovesFromFile("ChessGame.txt");
+        //printArrayList(inputMoves);
+        int fromPosition,toPosition;
+        char promoteTo;
+        int fromCol,fromRow,toCol,toRow;
+        String fromTo[] = new String[3];
+        String sendToFile;
+        Piece captureedPiece;
+        for (String move : inputMoves) {
+            //need to split each move to from and to
+            try{ 
+                if(gameOn)
+                {
+                    fromTo = move.split(",");
+                    fromRow = Board.getRowNumber(fromTo[0].charAt(1));
+                    fromCol = Board.getColumnNumber(fromTo[0].charAt(0));
+                    toRow = Board.getRowNumber(fromTo[1].charAt(1));
+                    toCol = Board.getColumnNumber(fromTo[1].charAt(0));
+                    try{
+                        promoteTo = fromTo[2].charAt(0);
+                    }catch(ArrayIndexOutOfBoundsException e)
+                    {
+                        promoteTo = 'n';
+                    }
+                    if(Board.isIllegal(toRow, toCol) || Board.isIllegal(fromCol, fromCol))
+                        throw new IllegalArgumentException();
+                    fromPosition = Board.getIntPosition(fromRow,fromCol);
+                    toPosition = Board.getIntPosition(toRow,toCol);
+                    System.out.println(fromPosition + " " + toPosition);
+                    if(promoteTo != 'n' && !(Board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))//promo
+                        throw new InvalidMove();
+                    //we have from and to and they are not illegal
+                    //are we trying to access an empty square?
+                    if(!isPieceMyColor(fromPosition) 
+                        ||Board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)//if empty or not my color
+                        throw new NotAccessiblePiece();
+                    else{//ur color
+                        //check castling
+                        Piece fromPiece, toPiece;
+                        fromPiece = Board.getBoardSquare(fromPosition).getPiece();
+                        toPiece = Board.getBoardSquare(toPosition).getPiece();
+                        if((fromPiece instanceof King) && (toPiece instanceof Rook) &&
+                            (fromPiece.getColorNum() == toPiece.getColorNum()))
+                        {
+                            //need to check if ath is clear
+                            //need to check if king is safe after this move
+                        }//else if enpassant
+                        //is it enpassant
+
+                        //else
+                        if(this.isValidMove(fromPosition,toPosition,promotionPiece(promoteTo)))//checks if it is a correct move and king is safe
+                        {//checks if it is a normal move no shenanigans (maybe pawn promo)
+                            //if a valid normal move then
+                            captureedPiece = board.getBoardSquare(toPosition).getPiece();
+                            board.movePiece(fromPosition, toPosition);//movement done 
+                            otherPlayer = player == 1 ? 0 : 1;
+                            if(captureedPiece.getColorNum() == otherPlayer)//either equals other color or -1
+                                writeToFile("Captured "/*kaza */);
+                            //now need to check if king in check
+                        }
+                        else
+                            throw new InvalidMove();
+
+                    }
+                }
+                else{//game offline
+                    writeToFile("Game already ended");
+                }
+            }
+            catch(InvalidMove e)
+            {
+                writeToFile("Invalid move");
+            }
+            catch(NotAccessiblePiece e){
+                //invalid move
+                writeToFile("Invalid move");
+            }
+            catch(IllegalArgumentException e)
+            {
+                writeToFile("Invalid move");
+                //illegal inout
+            }
+
+        }
     }
 
-    public boolean isValidMove() {
-        return false;
+    public boolean isValidMove(int fromPosition,int toPosition,Piece promoPiece) throws InvalidMove{
+        
+        //did it result in pawn prmotion? if so apply it
+        //romopiece should have something if its promo
+/*        if(promoPiece.getColorNum() != -1)//actually promo
+            {
+                if(!promotePawn(fromPosition, toPosition, promoPiece))//we sent something fa mafrood works
+                    {
+                        //if it didnt means a promootion piece was given yet it was invalid hence
+                        throw new InvalidMove();
+                    }
+            }
+*/ ///put this after aclling is valied and so
+            //s the move valid?
+        //if valid is there a capture?
+
+        //check is black or white in check?// is kingsafe // need to bool iskingincheck
+
+        //did someone win
+
+        //check is valid move
+        //checks isvalidmove piece checkpath ismykingsafe
+
+
+
+
+
+        return true;
 
     }
 
     // before i call this method isValied and checkPath should be called
-    public static boolean promotePawn(int myPosition, int nextPosition, Piece newPiece) {
+    public boolean promotePawn(int myPosition, int nextPosition, Piece newPiece) {
         BoardSquare promotionSquare = Board.getBoardSquare(nextPosition);
         Piece oldPiece = Board.getBoardSquare(myPosition).getPiece();
 
@@ -38,7 +231,7 @@ public class ChessGame {
 
     // just needs to check isKingSafe
     // first move dose not work
-    public static boolean isValiedCastle(int myPosition, int nextPosition) {
+    public boolean isValidCastle(int myPosition, int nextPosition) {
 
         BoardSquare kingSquare = Board.getBoardSquare(myPosition);
         BoardSquare rookSquare = Board.getBoardSquare(nextPosition);
@@ -92,8 +285,8 @@ public class ChessGame {
 
     }
 
-    public static boolean castle(int myPosition, int nextPosition) {
-        if (!isValiedCastle(myPosition, nextPosition))
+    public boolean castle(int myPosition, int nextPosition) {
+        if (!isValidCastle(myPosition, nextPosition))
             return false;
         BoardSquare kingSquare = Board.getBoardSquare(myPosition);
         BoardSquare rookSquare = Board.getBoardSquare(nextPosition);
@@ -128,7 +321,8 @@ public class ChessGame {
 
     }
 
-    public static void main(String[] args) {
+/*     public static void main(String[] args) {
+        
         System.out.println("----Chess Board----");
         Board testBoard = new Board();
         ArrayList<String> validMoves = new ArrayList<String>();
@@ -166,7 +360,7 @@ public class ChessGame {
         }
 
     }
-
+*/
     static void printArrayList(ArrayList<String> validMoves) {
         if (validMoves.size() == 0)
             System.out.println("array list is empty ");
