@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 public class Knight extends Piece {
 
-    public Knight(int color) {
+    public Knight(int color,Board board) {
         setColor(color);
+        this.board = board;
     }
 
     public boolean isValidMove(int myPosition, int nextPostion) {
@@ -22,7 +23,7 @@ public class Knight extends Piece {
 
     @Override
     boolean checkPath(int myPosition, int nextPostion) {
-        BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
+        BoardSquare nextBoardSquare = board.getBoardSquare(nextPostion);
         if (nextBoardSquare.getPiece().getColor().equals(this.getColor()))
             return false;
         else
@@ -38,11 +39,12 @@ public class Knight extends Piece {
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+    public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition/8;
         int c = myPosition%8;
         int newR,newC;
+        int newPosition;
         int rowFactor,colFactor;
         for(int rc = 0;rc<=1;rc++)
             {   
@@ -61,11 +63,12 @@ public class Knight extends Piece {
                         newR = r+i*rowFactor;
                         newC = c+j*colFactor;
                         try{//try catch lazem in loop cuz if out of lop it ends
-                            if(Board.isIllegal(newR, newC))
+                            if(board.isIllegal(newR, newC))
                                 throw new IllegalArgumentException();
-                            
-                            if(this.checkPath(myPosition, Board.getIntPosition(newR,newC)))//need to add iskingsafe
-                                validMoves.add(Board.createMoveString(r, c, newR, newC));
+                            newPosition = board.getIntPosition(newR,newC);   
+                            if(this.checkPath(myPosition, newPosition))//need to add iskingsafe
+                                if(isKingSafeFromMyMove(myPosition, newPosition))
+                                    validMoves.add(board.createMoveString(r, c, newR, newC));
                         }
                         catch(IllegalArgumentException e)
                         {

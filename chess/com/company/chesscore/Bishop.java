@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 public class Bishop extends Piece {
 
-    public Bishop(int color) {
+    public Bishop(int color,Board board) {
         setColor(color);
+        this.board = board;
     }
 
     // need to create a get all valid moves method for each piece
@@ -36,7 +37,7 @@ public class Bishop extends Piece {
         int currentCol = myCol + colChange;
         // checking if there is a piece in the path
         while (currentRow != nextRow && currentCol != nextCol) {//till we reach our square
-            BoardSquare nextBoardSquare = Board.getBoardSquare(currentRow * 8 + currentCol);
+            BoardSquare nextBoardSquare = board.getBoardSquare(currentRow * 8 + currentCol);
             
             //System.out.println(currentRow * 8 + currentCol +" "+ nextBoardSquare.getPiece());
             
@@ -48,7 +49,7 @@ public class Bishop extends Piece {
         }
         //System.out.println("done with path");
         // checking if the sqaure destination is empty
-        BoardSquare nextBoardSquare = Board.getBoardSquare(nextPosition);
+        BoardSquare nextBoardSquare = board.getBoardSquare(nextPosition);
         if (nextBoardSquare.getPiece().getColor().equals(getColor()))
             return false;//f in destiantion is of my own i cant go there
         else
@@ -63,12 +64,13 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+    public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition/8;
         int c = myPosition%8;
         int newR,newC;
         int temp = 1;
+        int newPosition;
         for(int i = -1;i<=1;i+=2)
         {
             for(int j= -1;j<=1;j+=2)//i and j for "direction"
@@ -77,26 +79,31 @@ public class Bishop extends Piece {
                     temp=1;
                     newR = r+temp*i;
                     newC = c+ temp*j;
-                    if(Board.isIllegal(newR, newC))//reach end of board
-                        throw new IllegalArgumentException(); 
-                    while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
+                    if(board.isIllegal(newR, newC))//reach end of board
+                        throw new IllegalArgumentException();
+                    newPosition = board.getIntPosition(newR, newC); 
+                    while(board.getBoardSquare(newPosition).getPiece().getColorNum() == -1)//while empy sqr
                     {
                         //need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            {
+                                validMoves.add(board.createMoveString(r, c, newR, newC));
+                            }
                         temp++;
                         newR = r+ temp*i;
                         newC =c+ temp*j;
-                        if(Board.isIllegal(newR, newC))//reach end of board
+                        if(board.isIllegal(newR, newC))//reach end of board
                             throw new IllegalArgumentException();
-                         
+                        newPosition = board.getIntPosition(newR, newC);
                     }
                     //reaching this means we hit a piece @newRnewC
-                    if(Board.getBoardSquare(Board.getIntPosition(newR, newC)).getPiece().getColorNum()
+                    if(board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum()
                         != this.getColorNum())
                     {
-                        //oppo color, can capture
                         //need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        //temporary movement
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            validMoves.add(board.createMoveString(r, c, newR, newC));
                     }
                         // end of possible path here, change path
                 }

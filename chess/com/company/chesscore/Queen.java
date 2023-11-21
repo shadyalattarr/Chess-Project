@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class Queen extends Piece {
     
-    public Queen(int color)
+    public Queen(int color,Board board)
     {
         setColor(color);
+        this.board = board;
     }
 
     //need to create a get all valid moves method for each piece
@@ -38,7 +39,7 @@ public class Queen extends Piece {
     
         //if not empty then invalied move
         while (currentRow != nextRow || currentCol != nextCol) {
-            BoardSquare nextBoardSquare = Board.getBoardSquare(currentRow * 8 + currentCol);
+            BoardSquare nextBoardSquare = board.getBoardSquare(currentRow * 8 + currentCol);
             if (nextBoardSquare.getPiece().getColorNum() != -1) {
                 return false; 
             }
@@ -47,7 +48,7 @@ public class Queen extends Piece {
     }
 
    
-    BoardSquare nextBoardSquare = Board.getBoardSquare(nextPosition);
+    BoardSquare nextBoardSquare = board.getBoardSquare(nextPosition);
     if (nextBoardSquare.getPiece().getColorNum()==(this.getColorNum())) {
         return false; 
     }
@@ -65,12 +66,13 @@ public class Queen extends Piece {
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+    public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition/8;
         int c = myPosition%8;
         int newR,newC;
         int temp = 1;
+        int newPosition;
         for(int i = -1;i<=1;i++)
         {
             for(int j= -1;j<=1;j++)//i and j for "direction"
@@ -81,26 +83,29 @@ public class Queen extends Piece {
                     temp=1;
                     newR = r+temp*i;
                     newC = c+ temp*j;
-                    if(Board.isIllegal(newR, newC))//reach end of board
+                    if(board.isIllegal(newR, newC))//reach end of board
                         throw new IllegalArgumentException(); 
-                    while(Board.getBoardSquare(Board.getIntPosition(newR,newC)).getPiece().getColorNum() == -1)//while empy sqr
+                    newPosition = board.getIntPosition(newR,newC);    
+                    while(board.getBoardSquare(newPosition).getPiece().getColorNum() == -1)//while empy sqr
                     {
                         //need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            validMoves.add(board.createMoveString(r, c, newR, newC));
                         temp++;
                         newR = r+ temp*i;
                         newC =c+ temp*j;
-                        if(Board.isIllegal(newR, newC))//reach end of board
+                        if(board.isIllegal(newR, newC))//reach end of board
                             throw new IllegalArgumentException();
-                         
+                         newPosition = board.getIntPosition(newR,newC);
                     }
                     //reaching this means we hit a piece @newRnewC
-                    if(Board.getBoardSquare(Board.getIntPosition(newR, newC)).getPiece().getColorNum()
+                    if(board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum()
                         != this.getColorNum())
                     {
                         //oppo color, can capture
                         //need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            validMoves.add(board.createMoveString(r, c, newR, newC));
                     }
                         // end of possible path here, change path
                 }

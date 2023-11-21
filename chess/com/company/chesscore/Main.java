@@ -4,61 +4,48 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        // sum things are static we can call them directly by Board.getBoardSquare(0)
+        // sum things are static we can call them directly by game1.getBoard().getBoardSquare(0)
         ChessGame game1 = new ChessGame();
-        Board.printBoard();
-        //game1.gameOn=false;
         game1.startGame();
-
-
-
-        /* 
-        System.out.println("----Chess Board----");
-        Board board = new Board();// makes no sense how we dealing wih it
-        // kolo 2awel 7arf but king Aa and WHITE black
-        ArrayList<String> validMoves = new ArrayList<String>();
-        */    
-        
-        
         
         
         
         
         // white pawn test
-        // Piece whitePawn = board.squares[6][3].getPiece();
+        // Piece whitePawn = game1.getBoard().squares[6][3].getPiece();
         // System.out.println("from 51");
 
-        // Board.getBoardSquare(3).setPiece(board.getBoardSquare(35).getPiece());// set
+        // game1.getBoard().getBoardSquare(3).setPiece(game1.getBoard().getBoardSquare(35).getPiece());// set
         // as b bishop
-        // Board.getBoardSquare(0).setPiece(board.getBoardSquare(1).getPiece());// set
+        // game1.getBoard().getBoardSquare(0).setPiece(game1.getBoard().getBoardSquare(1).getPiece());// set
         // as b bishop
 
         // validMoves = whitePawn.getAllValidMovesFromPiece(11);
         // //System.out.println(whitePawn.isValidMove(51, 35));
         // printArrayList(validMoves);
         // black pawn test
-        // Piece blackPawn = board.squares[1][3].getPiece();
+        // Piece blackPawn = game1.getBoard().squares[1][3].getPiece();
         // System.out.println("from 11");
-        // Board.getBoardSquare(19).setPiece(board.getBoardSquare(60).getPiece());// set
+        // game1.getBoard().getBoardSquare(19).setPiece(game1.getBoard().getBoardSquare(60).getPiece());// set
         // as b bishop
-        // Board.getBoardSquare(0).setPiece(board.getBoardSquare(1).getPiece());// set
+        // game1.getBoard().getBoardSquare(0).setPiece(game1.getBoard().getBoardSquare(1).getPiece());// set
         // as b bishop
         // validMoves = blackPawn.getAllValidMovesFromPiece(11);
         // System.out.println(blackPawn.checkPath(11, 27));
         // printArrayList(validMoves);
   /*       for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(8 * i + j + ":" + board.squares[i][j].getPiece() + "\t");
+                System.out.print(8 * i + j + ":" + game1.getBoard().squares[i][j].getPiece() + "\t");
             }
             System.out.println();
         }
 */
         // testing if white king safe
-        // Piece whiteKing = board.squares[7][3].getPiece();
+        // Piece whiteKing = game1.getBoard().squares[7][3].getPiece();
         // System.out.println("from 31");
-        // Board.getBoardSquare(29).setPiece(board.getBoardSquare(5).getPiece());//set
+        // game1.getBoard().getBoardSquare(29).setPiece(game1.getBoard().getBoardSquare(5).getPiece());//set
         // as b bishop
-        // Board.getBoardSquare(38).setPiece(board.getBoardSquare(6).getPiece());//set
+        // game1.getBoard().getBoardSquare(38).setPiece(game1.getBoard().getBoardSquare(6).getPiece());//set
         // as b bishop
         // validMoves = whiteKing.getAllValidMovesFromPiece(43);
         // printArrayList(validMoves);
@@ -66,7 +53,7 @@ public class Main {
 
         // testing white king getall validmoves
         /*
-         * Piece whiteKing = board.squares[7][3].getPiece();
+         * Piece whiteKing = game1.getBoard().squares[7][3].getPiece();
          * System.out.println("from 63");
          * validMoves = whiteKing.getAllValidMovesFromPiece(31);
          * printArrayList(validMoves);
@@ -74,32 +61,32 @@ public class Main {
 
         // tsting white knightgetall
         /*
-         * Piece whiteKnight = Board.getBoardSquare(62).getPiece();
+         * Piece whiteKnight = game1.getBoard().getBoardSquare(62).getPiece();
          * validMoves = whiteKnight.getAllValidMovesFromPiece(1);
          * printArrayList(validMoves);
          */
 
         // testing black queen getall
         /*
-         * Piece blackQueen = Board.getBoardSquare(3).getPiece();
+         * Piece blackQueen = game1.getBoard().getBoardSquare(3).getPiece();
          * validMoves = blackQueen.getAllValidMovesFromPiece(32);
          * printArrayList(validMoves);
          */
         // testing white bishop getall
         /*
-         * Piece whiteBishop = Board.getBoardSquare(58).getPiece();
+         * Piece whiteBishop = game1.getBoard().getBoardSquare(58).getPiece();
          * validMoves = whiteBishop.getAllValidMovesFromPiece(39);
          * printArrayList(validMoves);
          */
         // tesign black rook getall
         /*
-         * Piece blackRook = Board.getBoardSquare(7).getPiece();
+         * Piece blackRook = game1.getBoard().getBoardSquare(7).getPiece();
          * validMoves = blackRook.getAllValidMovesFromPiece(27);
          * printArrayList(validMoves);
          */
         // testing king 59 white movements
         /*
-         * Piece whiteKing = board.squares[7][3].getPiece();
+         * Piece whiteKing = game1.getBoard().squares[7][3].getPiece();
          * System.out.println(whiteKing.isValidMove(27, 18));
          * System.out.println(whiteKing.isValidMove(27, 19));
          * System.out.println(whiteKing.isValidMove(27, 20));
@@ -124,7 +111,7 @@ public class Main {
          */
         // testing black knight 1 movements
         /*
-         * Piece blackKnight = board.squares[0][1].getPiece();
+         * Piece blackKnight = game1.getBoard().squares[0][1].getPiece();
          * System.out.println(blackKnight.isValidMove(27, 10));
          * System.out.println(blackKnight.isValidMove(27, 12));
          * System.out.println(blackKnight.isValidMove(27, 21));
@@ -149,7 +136,7 @@ public class Main {
          */
         // testing white bishop
         /*
-         * Piece whiteBishop = board.getBoardSquare(58).getPiece();
+         * Piece whiteBishop = game1.getBoard().getBoardSquare(58).getPiece();
          * System.out.println(whiteBishop.isValidMove(27, 20));
          * System.out.println(whiteBishop.isValidMove(27, 13));
          * System.out.println(whiteBishop.isValidMove(27, 6));
@@ -171,7 +158,7 @@ public class Main {
          * System.out.println(whiteBishop.isValidMove(27, 12));
          * System.out.println(whiteBishop.isValidMove(27, 42));
          * System.out.println("Check path assume bishop @ 27");
-         * board.squares[3][3].setPiece(whiteBishop);
+         * game1.getBoard().squares[3][3].setPiece(whiteBishop);
          * System.out.println(whiteBishop.checkPath(27, 20));
          * System.out.println(whiteBishop.checkPath(27, 13));
          * System.out.println(whiteBishop.checkPath(27, 6));
@@ -188,7 +175,7 @@ public class Main {
          */
         // testing black rook
         /*
-         * Piece blackRook = board.getBoardSquare(0).getPiece();
+         * Piece blackRook = game1.getBoard().getBoardSquare(0).getPiece();
          * System.out.println(blackRook.isValidMove(27, 28));
          * System.out.println(blackRook.isValidMove(27, 29));
          * System.out.println(blackRook.isValidMove(27, 30));
@@ -217,7 +204,7 @@ public class Main {
          * System.out.println(blackRook.checkPath(0, 32));
          * System.out.println(blackRook.checkPath(0, 48));
          * System.out.println("assume black rook at 27");
-         * board.squares[3][3].setPiece(blackRook);
+         * game1.getBoard().squares[3][3].setPiece(blackRook);
          * System.out.println(blackRook.checkPath(27, 28));
          * System.out.println(blackRook.checkPath(27, 29));
          * System.out.println(blackRook.checkPath(27, 30));
@@ -235,7 +222,19 @@ public class Main {
          */
 
     }
-
+    static void printArrListOfArrList(ArrayList<ArrayList<Piece>> pieaces)
+    {
+        for(int i =0;i<pieaces.size();i++)
+        {
+            System.out.println();
+            System.out.println("color: " +i);
+            System.out.println("Size: "+ pieaces.get(i).size());
+            for(int j=0;j<pieaces.get(i).size();j++)
+            {
+                System.out.print(pieaces.get(i).get(j)+ " ");
+            }
+        }
+    }
     static void printArrayList(ArrayList<String> validMoves) {
         if (validMoves.size() == 0)
             System.out.println("array list is empty ");

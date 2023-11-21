@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class Rook extends Piece {
    
 
-    public Rook(int color) {
+    public Rook(int color,Board board) {
         setColor(color);
-
+        this.board = board;
     }
 
     // need to create a get all valid moves method for each piece
@@ -39,7 +39,7 @@ public class Rook extends Piece {
         int currentCol = myCol + colChange;
 
         while (currentRow != nextRow || currentCol != nextCol) {// lazem or ith
-            BoardSquare nextBoardSquare = Board.getBoardSquare(currentRow * 8 + currentCol);
+            BoardSquare nextBoardSquare = board.getBoardSquare(currentRow * 8 + currentCol);
             if (nextBoardSquare.getPiece().getColorNum() != -1) {// check if no pieces in paht
                 return false;
             }
@@ -47,7 +47,7 @@ public class Rook extends Piece {
             currentCol += colChange;
         }
 
-        BoardSquare nextBoardSquare = Board.getBoardSquare(nextPosition);
+        BoardSquare nextBoardSquare = board.getBoardSquare(nextPosition);
         if (nextBoardSquare.getPiece().getColor().equals(this.getColor())) {
             return false;
         }
@@ -62,11 +62,12 @@ public class Rook extends Piece {
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+    public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition / 8;
         int c = myPosition % 8;
         int newR, newC;
+        int newPosition;
         int temp = 1;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++)// i and j for "direction"
@@ -78,27 +79,30 @@ public class Rook extends Piece {
                     temp = 1;
                     newR = r + temp * i;
                     newC = c + temp * j;
-                    if (Board.isIllegal(newR, newC))// reach end of board
+                    if (board.isIllegal(newR, newC))// reach end of board
                         throw new IllegalArgumentException();
-                    while (Board.getBoardSquare(Board.getIntPosition(newR, newC)).getPiece().getColorNum() == -1)// while
+                    newPosition = board.getIntPosition(newR,newC);
+                    while (board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum() == -1)// while
                                                                                                                  // empy
                                                                                                                  // sqr
                     {
                         // need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            validMoves.add(board.createMoveString(r, c, newR, newC));
                         temp++;
                         newR = r + temp * i;
                         newC = c + temp * j;
-                        if (Board.isIllegal(newR, newC))// reach end of board
+                        if (board.isIllegal(newR, newC))// reach end of board
                             throw new IllegalArgumentException();
-
+                        newPosition = board.getIntPosition(newR,newC);
                     }
                     // reaching this means we hit a piece @newRnewC
-                    if (Board.getBoardSquare(Board.getIntPosition(newR, newC)).getPiece().getColorNum() != this
+                    if (board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum() != this
                             .getColorNum()) {
                         // oppo color, can capture
                         // need to check if king is safe
-                        validMoves.add(Board.createMoveString(r, c, newR, newC));
+                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                            validMoves.add(board.createMoveString(r, c, newR, newC));
                     }
                     // end of possible path here, change path
                 } catch (IllegalArgumentException e) {

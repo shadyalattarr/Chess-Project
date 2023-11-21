@@ -7,6 +7,7 @@ public class BoardSquare {
     {
         setPiece(piece);
         setSquarePosition(position);
+        piece.setPosition(position);
     }
     
     public void setSquarePosition(int pos)
@@ -26,6 +27,7 @@ public class BoardSquare {
 
     public void setPiece(Piece piece)
     {
+        piece.setPosition(position);
         this.piece = piece;
     }
 }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 public class EmptySquare extends Piece{
 
-    EmptySquare()
+    EmptySquare()//color lazem -1 so it is ignored
     {
+        super();
         setColor(-1);
+        //board not used
     }
 
     @Override
@@ -28,7 +30,7 @@ public class EmptySquare extends Piece{
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition) {
+    public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> valudMoves = new ArrayList<String>();
         return  valudMoves;//lazem keda send empty list
     }

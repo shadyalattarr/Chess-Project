@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class King extends Piece {
  
 
-    public King(int color) {
+    public King(int color,Board board) {
         setColor(color);
+        this.board = board;
     }
     public void setFirstMove(boolean firstMove)
     {
@@ -31,7 +32,7 @@ public class King extends Piece {
 
     @Override
     boolean checkPath(int myPosition, int nextPostion) {
-        BoardSquare nextBoardSquare = Board.getBoardSquare(nextPostion);
+        BoardSquare nextBoardSquare = board.getBoardSquare(nextPostion);
         if (nextBoardSquare.getPiece().getColor().equals(this.getColor()))//if same color piece
             return false;
         else
@@ -47,17 +48,17 @@ public class King extends Piece {
         int nextCol = nextPostion % 8;
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
-        boolean isRookFirstMove = Board.getBoardSquare(nextPostion).getPiece().firstMove;
+        boolean isRookFirstMove = board.getBoardSquare(nextPostion).getPiece().firstMove;
         if (rowDifference == 0 && colDifference >= 2 && firstMove && isRookFirstMove) {//need check rook first move?
             this.setFirstMove(false);
-            Board.getBoardSquare(nextPostion).getPiece().setFirstMove(false);
+            board.getBoardSquare(nextPostion).getPiece().setFirstMove(false);
             return true;
         }
         return false;
     }
 
     @Override
-    public ArrayList<String> getAllValidMovesFromPiece(int myPosition)
+    public ArrayList<String> getAllValidMovesFromPiece()
     {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition/8;
@@ -73,16 +74,16 @@ public class King extends Piece {
                     newC = i%3;
                     rowChange = newR-1;
                     colChange = newC-1;
-                    if(Board.isIllegal(r+rowChange, c+colChange))
+                    if(board.isIllegal(r+rowChange, c+colChange))
                         throw new IllegalArgumentException();
-                    int nextPos = Board.getIntPosition(r+rowChange, c+colChange);
-                    int nextPosColor = Board.getBoardSquare(nextPos).getPiece().getColorNum();
+                    int nextPos = board.getIntPosition(r+rowChange, c+colChange);
+                    int nextPosColor = board.getBoardSquare(nextPos).getPiece().getColorNum();
                     if(nextPosColor != this.getColorNum())//if not same color
                     {
                         //valid move
-                        if(Board.isMyKingSafe(nextPos, this.getColorNum()))
+                        if(isKingSafeFromMyMove(myPosition, nextPos))
                         {
-                            validMoves.add(Board.createMoveString(r,c, r+rowChange, c+colChange));
+                            validMoves.add(board.createMoveString(r,c, r+rowChange, c+colChange));
                             System.out.println("king safe");
                         }
                         else

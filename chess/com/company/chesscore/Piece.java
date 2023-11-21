@@ -5,13 +5,40 @@ import java.util.ArrayList;
 abstract public class Piece {
     private int color;//0 black and 1 white //-1 invlaid
     public boolean firstMove= true;
+    Board board;
+    int myPosition;
+
     
+    public void setPosition(int newPos)
+    {
+        myPosition = newPos;
+    }
+    public int getPiecePosition() {
+        return myPosition;
+    }
     abstract boolean isValidMove(int myPosition,int nextPostion);//a move that puts the king in danger
     //need to create a get all valid moves method for each piece
     //tye is string? array of string more like a list to be dynamic?
 
     //tostring shuld be deleted ith
-
+    public boolean isKingSafeFromMyMove(int myPosition,int newPosition)
+    {
+        //temporary move
+        Piece capturedPiece;
+        boolean returnValue = false;
+        capturedPiece = board.movePiece(myPosition, newPosition);
+        //after movement is king safe? // need my king pos and my color
+        if(board.isMyKingSafe(board.kingPosition[this.getColorNum()], this.getColorNum()))
+            {
+                returnValue = true;
+            }
+        //return piece
+        //my pos mafrood empty
+        board.movePiece(newPosition, myPosition);
+        //lazem neraga3aha lw empty square ez lw enemy put it back as if nothng happened
+        board.getBoardSquare(newPosition).setPiece(capturedPiece);
+        return returnValue;
+    }
     abstract boolean checkPath(int myPosition,int nextPostion);
 
     public void setColor(int color)
@@ -40,7 +67,7 @@ abstract public class Piece {
     }
 
 
-    abstract public ArrayList<String> getAllValidMovesFromPiece(int myPosition);
+    abstract public ArrayList<String> getAllValidMovesFromPiece();
 
     public void setFirstMove(boolean isFirstMove)
     {

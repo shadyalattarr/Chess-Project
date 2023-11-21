@@ -13,34 +13,39 @@ public class ChessGame {
     Board board;
     int player;
     boolean gameOn;
-    int whiteKingPos;
-    int blackKingPos;
+
+
+    public Board getBoard()
+    {
+        return board;
+    }
 
     ChessGame() {
         this.board = new Board();
+        board.initialiseBoard();
         this.player = 1;// white starts
         this.gameOn = true;
-        whiteKingPos = 60;
-        blackKingPos = 4;
+        
     }
-    public Piece promotionPiece(char stringPiece)
+    public Piece promotionPiece(int toPosition,char stringPiece)
     {
+        //lazem setpositio b setpiece
         Piece newPiece;
         switch (stringPiece) {
             case 'K':
-                newPiece = new Knight(player);
+                newPiece = new Knight(player,this.board);
                 System.out.println("promoted to knight");
                 break;
             case 'B':
-                newPiece = new Bishop(player);
+                newPiece = new Bishop(player,this.board);
                 System.out.println("promoted to bishop");
                 break;
             case 'R':
-                newPiece = new Rook(player);
+                newPiece = new Rook(player,this.board);
                 System.out.println("promoted to rook");
                 break;
             case 'Q':
-                newPiece = new Queen(player);
+                newPiece = new Queen(player,this.board);
                 System.out.println("promoted to queen");
                 break;
             default:
@@ -73,24 +78,55 @@ public class ChessGame {
         } 
         return inputMoves;
     }
-    public void writeToFile(String event){
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(new File("Output.txt"),true));
-            bw.write(event);
-            bw.write("\n");
-            bw.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
     public boolean isPieceMyColor(int fromPosition)
     {
-        return Board.getBoardSquare(fromPosition).getPiece().getColorNum() == player;//player 0 black and 1 white..
+        return board.getBoardSquare(fromPosition).getPiece().getColorNum() == player;//player 0 black and 1 white..
         //we check before this that we are not accessing an empty square
     }
+    
+    
+    public boolean isLoneKing(int color)
+    {
+        if(board.piecesArray.get(color).size() == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    public boolean isKingAndBishop(int color)
+    {
+        if(board.piecesArray.get(color).size()==2)
+        {
+            if(board.piecesArray.get(color).get(0) instanceof Bishop
+                || board.piecesArray.get(color).get(1) instanceof Bishop)
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isKingAndKnight(int color)
+    {
+        if(board.piecesArray.get(color).size()==2)
+        {
+            if(board.piecesArray.get(color).get(0) instanceof Knight
+                || board.piecesArray.get(color).get(1) instanceof Knight)
+            return true;
+        }
+        return false;
+    }
+    public boolean isThisColorInsufficient(int color)
+    {
+        return isKingAndBishop(color) || isLoneKing(color) || isKingAndKnight(color);
+    }
+
+    public boolean insufficientMaterial()
+    {
+        return isThisColorInsufficient(0) && isThisColorInsufficient(1);
+    }
+    
     public void startGame()
     {
+        boolean kingInCheck[] = {false,false};
         int otherPlayer;
         ArrayList<String> inputMoves = getMovesFromFile("ChessGame.txt");
         //printArrayList(inputMoves);
@@ -98,41 +134,41 @@ public class ChessGame {
         char promoteTo;
         int fromCol,fromRow,toCol,toRow;
         String fromTo[] = new String[3];
-        String sendToFile;
-        Piece captureedPiece;
+        Piece capturedPiece;
         for (String move : inputMoves) {
             //need to split each move to from and to
             try{ 
                 if(gameOn)
                 {
                     fromTo = move.split(",");
-                    fromRow = Board.getRowNumber(fromTo[0].charAt(1));
-                    fromCol = Board.getColumnNumber(fromTo[0].charAt(0));
-                    toRow = Board.getRowNumber(fromTo[1].charAt(1));
-                    toCol = Board.getColumnNumber(fromTo[1].charAt(0));
+                    fromRow = board.getRowNumber(fromTo[0].charAt(1));
+                    fromCol = board.getColumnNumber(fromTo[0].charAt(0));
+                    toRow = board.getRowNumber(fromTo[1].charAt(1));
+                    toCol = board.getColumnNumber(fromTo[1].charAt(0));
                     try{
                         promoteTo = fromTo[2].charAt(0);
                     }catch(ArrayIndexOutOfBoundsException e)
                     {
                         promoteTo = 'n';
                     }
-                    if(Board.isIllegal(toRow, toCol) || Board.isIllegal(fromCol, fromCol))
+                    if(board.isIllegal(toRow, toCol) || board.isIllegal(fromRow, fromCol))
                         throw new IllegalArgumentException();
-                    fromPosition = Board.getIntPosition(fromRow,fromCol);
-                    toPosition = Board.getIntPosition(toRow,toCol);
+                    fromPosition = board.getIntPosition(fromRow,fromCol);
+                    toPosition = board.getIntPosition(toRow,toCol);
                     System.out.println(fromPosition + " " + toPosition);
-                    if(promoteTo != 'n' && !(Board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))//promo
+                    if(promoteTo != 'n' && !(board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))//promo
                         throw new InvalidMove();
                     //we have from and to and they are not illegal
                     //are we trying to access an empty square?
                     if(!isPieceMyColor(fromPosition) 
-                        ||Board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)//if empty or not my color
+                        ||board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)//if empty or not my color
                         throw new NotAccessiblePiece();
                     else{//ur color
+
                         //check castling
                         Piece fromPiece, toPiece;
-                        fromPiece = Board.getBoardSquare(fromPosition).getPiece();
-                        toPiece = Board.getBoardSquare(toPosition).getPiece();
+                        fromPiece = board.getBoardSquare(fromPosition).getPiece();
+                        toPiece = board.getBoardSquare(toPosition).getPiece();
                         if((fromPiece instanceof King) && (toPiece instanceof Rook) &&
                             (fromPiece.getColorNum() == toPiece.getColorNum()))
                         {
@@ -141,78 +177,101 @@ public class ChessGame {
                         }//else if enpassant
                         //is it enpassant
 
-                        //else
-                        if(this.isValidMove(fromPosition,toPosition,promotionPiece(promoteTo)))//checks if it is a correct move and king is safe
+                        //else 
+                        if(this.isValidMove(fromPosition,toPosition))//checks if it is a correct move and king is safe
                         {//checks if it is a normal move no shenanigans (maybe pawn promo)
                             //if a valid normal move then
-                            captureedPiece = board.getBoardSquare(toPosition).getPiece();
-                            board.movePiece(fromPosition, toPosition);//movement done 
+                            capturedPiece = board.movePiece(fromPosition, toPosition);
+                            board.capture(capturedPiece);//for array list
+                            //movement done 
                             otherPlayer = player == 1 ? 0 : 1;
-                            if(captureedPiece.getColorNum() == otherPlayer)//either equals other color or -1
-                                writeToFile("Captured "/*kaza */);
+                            if(capturedPiece.getColorNum() == otherPlayer)//either equals other color or -1
+                                System.out.println("Captured "+ capturedPiece);
                             //now need to check if king in check
                         }
                         else
                             throw new InvalidMove();
 
+                        //did a king become in check
+                        //if you white your move makes the other dude in check
+                        kingInCheck[otherPlayer] = !board.isMyKingSafe(board.kingPosition[otherPlayer],otherPlayer);
+                        if(kingInCheck[otherPlayer])
+                        {
+                            if(!board.canImakeAnyMoves(otherPlayer))
+                            {
+                                if(otherPlayer==0){
+                                    System.out.println("White Won");
+                                    gameOn = false;
+                                }
+                                else
+                                {
+                                    System.out.println("Black Won");
+                                    gameOn = false;
+                                }
+                            }
+                            else
+                            {
+                                if(otherPlayer==0)
+                                    System.out.println("Black in check");
+                                else
+                                    System.out.println("White in check");
+                            }
+                        }else{//king not in check
+                            if(!board.canImakeAnyMoves(otherPlayer))
+                            {//stalemate
+                                    gameOn = false;
+                                    System.out.println("Stalemate");                            
+                            }
+                            //i can move and am not in check ez
+                            //insfficient material to continue?
+                            if(insufficientMaterial())
+                            {
+                                System.out.println("Insufficient material");
+                                gameOn = false;
+                            }else{
+                                if(player == 0)
+                                    player = 1;
+                                else
+                                    player = 0;
+                            }
+                        }
+
                     }
                 }
                 else{//game offline
-                    writeToFile("Game already ended");
+                    System.out.println("Game already ended");
                 }
             }
             catch(InvalidMove e)
             {
-                writeToFile("Invalid move");
+                System.out.println("Invalid move");
             }
             catch(NotAccessiblePiece e){
                 //invalid move
-                writeToFile("Invalid move");
+                System.out.println("Invalid move");
             }
             catch(IllegalArgumentException e)
             {
-                writeToFile("Invalid move");
+                System.out.println("Invalid move");
                 //illegal inout
             }
 
         }
     }
 
-    public boolean isValidMove(int fromPosition,int toPosition,Piece promoPiece) throws InvalidMove{
+    public boolean isValidMove(int fromPosition,int toPosition) {
         
-        //did it result in pawn prmotion? if so apply it
-        //romopiece should have something if its promo
-/*        if(promoPiece.getColorNum() != -1)//actually promo
-            {
-                if(!promotePawn(fromPosition, toPosition, promoPiece))//we sent something fa mafrood works
-                    {
-                        //if it didnt means a promootion piece was given yet it was invalid hence
-                        throw new InvalidMove();
-                    }
-            }
-*/ ///put this after aclling is valied and so
-            //s the move valid?
-        //if valid is there a capture?
-
-        //check is black or white in check?// is kingsafe // need to bool iskingincheck
-
-        //did someone win
-
-        //check is valid move
-        //checks isvalidmove piece checkpath ismykingsafe
-
-
-
-
-
-        return true;
+        Piece fromPiece = board.getBoardSquare(fromPosition).getPiece();
+        
+        return fromPiece.isValidMove(fromPosition, toPosition) && fromPiece.checkPath(fromPosition, toPosition)
+        && fromPiece.isKingSafeFromMyMove(fromPosition, toPosition);
 
     }
 
     // before i call this method isValied and checkPath should be called
     public boolean promotePawn(int myPosition, int nextPosition, Piece newPiece) {
-        BoardSquare promotionSquare = Board.getBoardSquare(nextPosition);
-        Piece oldPiece = Board.getBoardSquare(myPosition).getPiece();
+        BoardSquare promotionSquare = board.getBoardSquare(nextPosition);
+        Piece oldPiece = board.getBoardSquare(myPosition).getPiece();
 
         if (oldPiece instanceof Pawn) {
             int row = nextPosition / 8;
@@ -233,8 +292,8 @@ public class ChessGame {
     // first move dose not work
     public boolean isValidCastle(int myPosition, int nextPosition) {
 
-        BoardSquare kingSquare = Board.getBoardSquare(myPosition);
-        BoardSquare rookSquare = Board.getBoardSquare(nextPosition);
+        BoardSquare kingSquare = board.getBoardSquare(myPosition);
+        BoardSquare rookSquare = board.getBoardSquare(nextPosition);
         Piece king = kingSquare.getPiece();
         Piece rook = rookSquare.getPiece();
         System.out.println(king instanceof King);
@@ -246,8 +305,8 @@ public class ChessGame {
                     // System.out.println("white");
                     if (myPosition == 60 && nextPosition == 63) {
                         if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
-                            if (Board.getBoardSquare(61).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(62).getPiece().getColor().equals("Empty Square")) {
+                            if (board.getBoardSquare(61).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(62).getPiece().getColor().equals("Empty Square")) {
                                 return true;
                             }
                         }
@@ -256,25 +315,25 @@ public class ChessGame {
                         // System.out.println(kingSquare.getPiece().firstMove);
                         // System.out.println(rookSquare.getPiece().firstMove);
                         if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
-                            if (Board.getBoardSquare(59).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(58).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(57).getPiece().getColor().equals("Empty Square"))
+                            if (board.getBoardSquare(59).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(58).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(57).getPiece().getColor().equals("Empty Square"))
                                 return true;
                         }
                     }
                 } else {
                     if (myPosition == 4 && nextPosition == 7) {
                         if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
-                            if (Board.getBoardSquare(5).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(6).getPiece().getColor().equals("Empty Square")) {
+                            if (board.getBoardSquare(5).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(6).getPiece().getColor().equals("Empty Square")) {
                                 return true;
                             }
                         }
                     } else if (myPosition == 4 && nextPosition == 0) {
                         if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
-                            if (Board.getBoardSquare(3).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(2).getPiece().getColor().equals("Empty Square")
-                                    && Board.getBoardSquare(1).getPiece().getColor().equals("Empty Square"))
+                            if (board.getBoardSquare(3).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(2).getPiece().getColor().equals("Empty Square")
+                                    && board.getBoardSquare(1).getPiece().getColor().equals("Empty Square"))
                                 return true;
                         }
                     }
@@ -288,33 +347,33 @@ public class ChessGame {
     public boolean castle(int myPosition, int nextPosition) {
         if (!isValidCastle(myPosition, nextPosition))
             return false;
-        BoardSquare kingSquare = Board.getBoardSquare(myPosition);
-        BoardSquare rookSquare = Board.getBoardSquare(nextPosition);
+        BoardSquare kingSquare = board.getBoardSquare(myPosition);
+        BoardSquare rookSquare = board.getBoardSquare(nextPosition);
         Piece king = kingSquare.getPiece();
         Piece rook = rookSquare.getPiece();
-        if (myPosition == 60 && nextPosition == 63 && Board.isMyKingSafe(62, king.getColorNum())) {
-            Board.getBoardSquare(61).setPiece(rook);
-            Board.getBoardSquare(62).setPiece(king);
-            Board.getBoardSquare(60).setPiece(new EmptySquare());
-            Board.getBoardSquare(63).setPiece(new EmptySquare());
+        if (myPosition == 60 && nextPosition == 63 && board.isMyKingSafe(62, king.getColorNum())) {
+            board.getBoardSquare(61).setPiece(rook);
+            board.getBoardSquare(62).setPiece(king);
+            board.getBoardSquare(60).setPiece(new EmptySquare());
+            board.getBoardSquare(63).setPiece(new EmptySquare());
             return true;
-        } else if (myPosition == 60 && nextPosition == 56 && Board.isMyKingSafe(58, king.getColorNum())) {
-            Board.getBoardSquare(59).setPiece(rook);
-            Board.getBoardSquare(58).setPiece(king);
-            Board.getBoardSquare(60).setPiece(new EmptySquare());
-            Board.getBoardSquare(56).setPiece(new EmptySquare());
+        } else if (myPosition == 60 && nextPosition == 56 && board.isMyKingSafe(58, king.getColorNum())) {
+            board.getBoardSquare(59).setPiece(rook);
+            board.getBoardSquare(58).setPiece(king);
+            board.getBoardSquare(60).setPiece(new EmptySquare());
+            board.getBoardSquare(56).setPiece(new EmptySquare());
             return true;
-        } else if (myPosition == 4 && nextPosition == 7 && Board.isMyKingSafe(6, king.getColorNum())) {
-            Board.getBoardSquare(5).setPiece(rook);
-            Board.getBoardSquare(6).setPiece(king);
-            Board.getBoardSquare(4).setPiece(new EmptySquare());
-            Board.getBoardSquare(7).setPiece(new EmptySquare());
+        } else if (myPosition == 4 && nextPosition == 7 && board.isMyKingSafe(6, king.getColorNum())) {
+            board.getBoardSquare(5).setPiece(rook);
+            board.getBoardSquare(6).setPiece(king);
+            board.getBoardSquare(4).setPiece(new EmptySquare());
+            board.getBoardSquare(7).setPiece(new EmptySquare());
             return true;
-        } else if (myPosition == 4 && nextPosition == 0 && Board.isMyKingSafe(2, king.getColorNum())) {
-            Board.getBoardSquare(3).setPiece(rook);
-            Board.getBoardSquare(2).setPiece(king);
-            Board.getBoardSquare(4).setPiece(new EmptySquare());
-            Board.getBoardSquare(0).setPiece(new EmptySquare());
+        } else if (myPosition == 4 && nextPosition == 0 && board.isMyKingSafe(2, king.getColorNum())) {
+            board.getBoardSquare(3).setPiece(rook);
+            board.getBoardSquare(2).setPiece(king);
+            board.getBoardSquare(4).setPiece(new EmptySquare());
+            board.getBoardSquare(0).setPiece(new EmptySquare());
             return true;
         } else
             return false;
@@ -327,25 +386,25 @@ public class ChessGame {
         Board testBoard = new Board();
         ArrayList<String> validMoves = new ArrayList<String>();
         // test castle
-        // Piece whiteKing = testBoard.squares[7][4].getPiece();
+        // Piece whiteKing = testboard.squares[7][4].getPiece();
         // System.out.println(whiteKing.firstMove + "he");
-        // Piece whiteRook = testBoard.squares[7][0].getPiece();
+        // Piece whiteRook = testboard.squares[7][0].getPiece();
         // promotion test
-        // Board.getBoardSquare(8).setPiece(testBoard.getBoardSquare(50).getPiece());
-        // Board.getBoardSquare(0).setPiece(new EmptySquare());
+        // board.getBoardSquare(8).setPiece(testboard.getBoardSquare(50).getPiece());
+        // board.getBoardSquare(0).setPiece(new EmptySquare());
 
         // System.out.println(promotePawn(8, 0, new Queen(1)));
-        System.out.println(testBoard.getBoardSquare(8).getPiece().firstMove);
+        System.out.println(testboard.getBoardSquare(8).getPiece().firstMove);
 
-        // testBoard.getBoardSquare(57).setPiece(new EmptySquare());
-        // testBoard.getBoardSquare(58).setPiece(new EmptySquare());
-        // testBoard.getBoardSquare(59).setPiece(new EmptySquare());
-        testBoard.getBoardSquare(57).setPiece(new EmptySquare());
-        testBoard.getBoardSquare(58).setPiece(new EmptySquare());
-        testBoard.getBoardSquare(59).setPiece(new EmptySquare());
+        // testboard.getBoardSquare(57).setPiece(new EmptySquare());
+        // testboard.getBoardSquare(58).setPiece(new EmptySquare());
+        // testboard.getBoardSquare(59).setPiece(new EmptySquare());
+        testboard.getBoardSquare(57).setPiece(new EmptySquare());
+        testboard.getBoardSquare(58).setPiece(new EmptySquare());
+        testboard.getBoardSquare(59).setPiece(new EmptySquare());
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(8 * i + j + ":" + testBoard.squares[i][j].getPiece() + "\t");
+                System.out.print(8 * i + j + ":" + testboard.squares[i][j].getPiece() + "\t");
             }
             System.out.println();
         }
@@ -354,7 +413,7 @@ public class ChessGame {
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                System.out.print(8 * i + j + ":" + testBoard.squares[i][j].getPiece() + "\t");
+                System.out.print(8 * i + j + ":" + testboard.squares[i][j].getPiece() + "\t");
             }
             System.out.println();
         }
