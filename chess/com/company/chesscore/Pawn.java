@@ -114,19 +114,17 @@ public class Pawn extends Piece {
         return "P";
     }
 
+    public boolean checkDiagsCapture(int nextPosition)
+    {
+        
+        return false;
+    }
     // fall in last col and first col
     @Override
     public ArrayList<String> getAllValidMovesFromPiece() {
         ArrayList<String> validMoves = new ArrayList<String>();
         int r = myPosition / 8;
         int c = myPosition % 8;
-        // needs to adjust if its last col can only move up and down not out of board
-        // int rowChange, colChange, newR, newC;
-        // boolean blackOutOfBoard = board.isIllegal(r + 1, c) || board.isIllegal(r + 1, c + 1)
-        //         || board.isIllegal(r + 1, c - 1);
-        // boolean whiteOutOfBoard = board.isIllegal(r - 1, c) || board.isIllegal(r - 1, c + 1)
-        //         || board.isIllegal(r - 1, c - 1);
-
         if (firstMove) {
             //nn check illegal
             if (getColorNum() == 0) {//blck can go down 1 or 2 or diags eat

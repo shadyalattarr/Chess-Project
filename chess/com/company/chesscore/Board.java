@@ -27,10 +27,11 @@ public class Board {
             currentPiece = piecesOfThisColor.get(i);
             if(piecesOfThisColor.get(i).getAllValidMovesFromPiece().size() != 0)
             {
+                System.out.println(piecesOfThisColor.get(i)+ " still hac valid moves");
                 return true;
             }
         }
-        return true;
+        return false;
     
     }
     public void initialiseBoard()

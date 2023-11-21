@@ -137,6 +137,9 @@ public class ChessGame {
         Piece capturedPiece;
         for (String move : inputMoves) {
             //need to split each move to from and to
+            System.out.println(player);
+            board.printBoard();
+            System.out.println(move);
             try{ 
                 if(gameOn)
                 {
@@ -149,20 +152,25 @@ public class ChessGame {
                         promoteTo = fromTo[2].charAt(0);
                     }catch(ArrayIndexOutOfBoundsException e)
                     {
-                        promoteTo = 'n';
+                        promoteTo = 'n';//no promo
                     }
                     if(board.isIllegal(toRow, toCol) || board.isIllegal(fromRow, fromCol))
                         throw new IllegalArgumentException();
                     fromPosition = board.getIntPosition(fromRow,fromCol);
                     toPosition = board.getIntPosition(toRow,toCol);
-                    System.out.println(fromPosition + " " + toPosition);
                     if(promoteTo != 'n' && !(board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))//promo
-                        throw new InvalidMove();
+                        {
+                            throw new InvalidMove();
+                        }
                     //we have from and to and they are not illegal
                     //are we trying to access an empty square?
                     if(!isPieceMyColor(fromPosition) 
                         ||board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)//if empty or not my color
-                        throw new NotAccessiblePiece();
+                        {
+                            System.out.println(player);
+                            System.out.println(board.getBoardSquare(fromPosition).getPiece().getColorNum());
+                            throw new NotAccessiblePiece();
+                        }
                     else{//ur color
 
                         //check castling
@@ -190,8 +198,10 @@ public class ChessGame {
                             //now need to check if king in check
                         }
                         else
-                            throw new InvalidMove();
-
+                            {
+                                System.out.println("move not vald frmo ours");
+                                throw new InvalidMove();
+                            }
                         //did a king become in check
                         //if you white your move makes the other dude in check
                         kingInCheck[otherPlayer] = !board.isMyKingSafe(board.kingPosition[otherPlayer],otherPlayer);
@@ -217,6 +227,7 @@ public class ChessGame {
                                     System.out.println("White in check");
                             }
                         }else{//king not in check
+                            System.out.println();
                             if(!board.canImakeAnyMoves(otherPlayer))
                             {//stalemate
                                     gameOn = false;
@@ -228,14 +239,13 @@ public class ChessGame {
                             {
                                 System.out.println("Insufficient material");
                                 gameOn = false;
-                            }else{
-                                if(player == 0)
+                            }
+                            
+                        }
+                            if(player == 0)
                                     player = 1;
                                 else
                                     player = 0;
-                            }
-                        }
-
                     }
                 }
                 else{//game offline
@@ -244,11 +254,11 @@ public class ChessGame {
             }
             catch(InvalidMove e)
             {
-                System.out.println("Invalid move");
+                System.out.println("Invalid moveeeeee");
             }
             catch(NotAccessiblePiece e){
                 //invalid move
-                System.out.println("Invalid move");
+                System.out.println("Invalid move?");
             }
             catch(IllegalArgumentException e)
             {
