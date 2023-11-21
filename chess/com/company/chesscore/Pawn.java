@@ -126,12 +126,12 @@ public class Pawn extends Piece {
         if (firstMove) {
             // nn check illegal
             if (getColorNum() == 0) {// blck can go down 1 or 2 or diags eat
-                if (board.getBoardSquare(myPosition + 8).getPiece().getColor().equals("Empty Square")
-                        && isKingSafeFromMyMove(myPosition, myPosition + 8)) {
+                if (board.getBoardSquare(myPosition + 8).getPiece().getColor().equals("Empty Square")) {
                     if (board.getBoardSquare(myPosition + 16).getPiece().getColor().equals("Empty Square")
                             && isKingSafeFromMyMove(myPosition, myPosition + 16))
                         validMoves.add(board.createMoveString(r, c, r + 2, c));// 2 fwd
-                    validMoves.add(board.createMoveString(r, c, r + 1, c));// 1 fwd
+                    if(isKingSafeFromMyMove(myPosition, myPosition + 8))
+                        validMoves.add(board.createMoveString(r, c, r + 1, c));// 1 fwd
                 }
                 if (board.getBoardSquare(myPosition + 7).getPiece().getColor().equals("White") && (c > 0)
                         && isKingSafeFromMyMove(myPosition, myPosition + 7))// checkin left diag except 0
@@ -141,15 +141,15 @@ public class Pawn extends Piece {
                     validMoves.add(board.createMoveString(r, c, r + 1, c + 1));
             } else {
                 // wjite first move go up
-                if (board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square")
-                        && isKingSafeFromMyMove(myPosition, myPosition - 8)) {
+                if (board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square")){
                     {
 
                         if (board.getBoardSquare(myPosition - 16).getPiece().getColor().equals("Empty Square")
                                 && isKingSafeFromMyMove(myPosition, myPosition - 16))
                             validMoves.add(board.createMoveString(r, c, r - 2, c));
                     }
-                    validMoves.add(board.createMoveString(r, c, r - 1, c));
+                    if(isKingSafeFromMyMove(myPosition, myPosition - 8))
+                        validMoves.add(board.createMoveString(r, c, r - 1, c));
                     if (board.getBoardSquare(myPosition - 7).getPiece().getColor().equals("Black") && (c < 7)
                             && isKingSafeFromMyMove(myPosition, myPosition - 7))
                         validMoves.add(board.createMoveString(r, c, r - 1, c + 1));
@@ -157,7 +157,7 @@ public class Pawn extends Piece {
                             && isKingSafeFromMyMove(myPosition, myPosition - 9))
                         validMoves.add(board.createMoveString(r, c, r - 1, c - 1));
                 }
-
+            
             }
         } else {// not first move
             if (getColorNum() == 0 && (r < 7)) {// black and not in end// if in end pawn promo
