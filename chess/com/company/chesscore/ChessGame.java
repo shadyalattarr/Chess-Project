@@ -137,9 +137,9 @@ public class ChessGame {
         Piece capturedPiece;
         for (String move : inputMoves) {
             //need to split each move to from and to
-            System.out.println(player);
-            board.printBoard();
-            System.out.println(move);
+            //System.out.println(player);
+            //board.printBoard();
+            //System.out.println(move);
             try{ 
                 if(gameOn)
                 {
@@ -227,7 +227,7 @@ public class ChessGame {
                                     System.out.println("White in check");
                             }
                         }else{//king not in check
-                            System.out.println();
+                            
                             if(!board.canImakeAnyMoves(otherPlayer))
                             {//stalemate
                                     gameOn = false;

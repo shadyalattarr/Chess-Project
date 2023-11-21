@@ -84,11 +84,11 @@ public class King extends Piece {
                         if(isKingSafeFromMyMove(myPosition, nextPos))
                         {
                             validMoves.add(board.createMoveString(r,c, r+rowChange, c+colChange));
-                            System.out.println("king safe");
+                            //System.out.println("king safe");
                         }
                         else
                         {
-                            System.out.println("king is NOT safe");
+                            //System.out.println("king is NOT safe");
                         }
                     }
                 }

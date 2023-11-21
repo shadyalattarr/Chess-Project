@@ -27,7 +27,7 @@ public class Board {
             currentPiece = piecesOfThisColor.get(i);
             if(piecesOfThisColor.get(i).getAllValidMovesFromPiece().size() != 0)
             {
-                System.out.println(piecesOfThisColor.get(i)+ " still hac valid moves");
+                //System.out.println(piecesOfThisColor.get(i)+ " still hac valid moves");
                 return true;
             }
         }
@@ -228,7 +228,8 @@ public class Board {
                     if((getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Bishop
                      || getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Queen) &&
                      getBoardSquare(getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
-                        {System.out.println("queen or bishop strikes");return false;}
+                        {//System.out.println("queen or bishop strikes");
+                        return false;}
                 }
                 catch(IllegalArgumentException e)
                 {
@@ -262,7 +263,8 @@ public class Board {
                     if((getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Rook
                      || getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Queen) &&
                      getBoardSquare(getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
-                        {System.out.println("rook or bishop strikes");return false;}
+                        {//System.out.println("rook or bishop strikes");
+                        return false;}
                     // end of possible path here, change path
                 }
                 catch(IllegalArgumentException e)
@@ -297,7 +299,8 @@ public class Board {
                         //if knight found there and his color is not ,ine we in danger
                         if(getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Knight &&
                             getBoardSquare(getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
-                                {System.out.println("knight strikes");return false;}
+                                {//System.out.println("knight strikes");
+                                return false;}
                     }
                     catch(IllegalArgumentException e)
                     {
@@ -319,7 +322,8 @@ public class Board {
                 //if pawn found and opposite color
                 if(getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof Pawn &&
                     getBoardSquare(getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
-                        {System.out.println("pawn strikes");return false;}
+                        {//System.out.println("pawn strikes");
+                        return false;}
             }
             catch(IllegalArgumentException e)
             {
@@ -338,7 +342,8 @@ public class Board {
                             throw new IllegalArgumentException();
                         if(getBoardSquare(getIntPosition(newR,newC)).getPiece() instanceof King &&
                             getBoardSquare(getIntPosition(newR,newC)).getPiece().getColorNum() != myColor)
-                                {System.out.println("king strikes");return false;}
+                                {//System.out.println("king strikes");
+                                return false;}
                     }
                     catch(IllegalArgumentException e)
                     {
