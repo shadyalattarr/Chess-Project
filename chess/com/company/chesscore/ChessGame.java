@@ -143,7 +143,6 @@ public class ChessGame {
                     toPosition = board.getIntPosition(toRow, toCol);
                     if (promoteTo != 'n' && !(board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))// promo
                     {
-                        System.out.println("smth wierd");
                         throw new InvalidMove();
                     }
                     // we have from and to and they are not illegal
@@ -152,7 +151,6 @@ public class ChessGame {
                             || board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)// if empty or not my
                                                                                                  // color
                     {
-                        System.out.println("not ur piece");
                         throw new NotAccessiblePiece();
                     } else {// ur color
 
@@ -181,7 +179,6 @@ public class ChessGame {
                         else if (fromPiece instanceof Pawn) {
                             // System.out.println(fromPosition + " " + toPosition);
                             if (!fromPiece.isKingSafeFromMyMove(fromPosition, toPosition)) {
-                                System.out.println("move not vald frmo ours");
                                 throw new InvalidMove();
                             } else {
                                 Pawn pawn = (Pawn) fromPiece;
@@ -214,7 +211,6 @@ public class ChessGame {
                                     }
                                     
                                 } else {
-                                    System.out.println("move noooooooot vald frmo ours");
                                     throw new InvalidMove();
                                 }
                             }
@@ -249,7 +245,6 @@ public class ChessGame {
                                 //check of afer move the piece is pawn
                                 
                             } else {
-                                System.out.println("move notoodoodododododsss ours");
                                 throw new InvalidMove();
                             }
                         }
@@ -280,7 +275,7 @@ public class ChessGame {
                             // i can move and am not in check ez
                             // insfficient material to continue?
                             if (insufficientMaterial()) {
-                                System.out.println("Insufficient material");
+                                System.out.println("Insufficient Material");
                                 gameOn = false;
                             }
 
