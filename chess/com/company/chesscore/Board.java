@@ -354,4 +354,118 @@ public class Board {
         
         return true;
     }
+    public int getRookPostion(int kingPosition, int nextPosition) {
+        if (kingPosition == 60 && nextPosition == 62)
+            return 63;
+        else if (kingPosition == 60 && nextPosition == 58)
+            return 56;
+        else if (kingPosition == 4 && nextPosition == 6)
+            return 7;
+        else if (kingPosition == 4 && nextPosition == 2)
+            return 0;
+        else
+            return -1;
+    }
+
+    public boolean isValidCastle(int myPosition, int nextPosition) {
+        nextPosition = getRookPostion(myPosition, nextPosition);
+        // System.out.println("helllo");
+        // System.out.println(nextPosition + " " + nextPosition);
+        if (nextPosition == -1)
+            return false;
+        // System.out.println("helllo");
+        BoardSquare kingSquare = getBoardSquare(myPosition);
+        BoardSquare rookSquare = getBoardSquare(nextPosition);
+        Piece king = kingSquare.getPiece();
+        Piece rook = rookSquare.getPiece();
+        // System.out.println(king instanceof King);
+        if (king instanceof King && rook instanceof Rook && isMyKingSafe(myPosition, king.getColorNum())) {
+            // System.out.println("king and rook");
+            if (king.getColor().equals(rook.getColor())) {
+                // System.out.println("same color");
+                if (king.getColor().equals("White")) {
+                    // System.out.println("white");
+
+                    if (myPosition == 60 && nextPosition == 63) {
+                        // System.out.println("right place");
+                        if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
+                            // System.out.println("right move");
+                            if (getBoardSquare(61).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(62).getPiece().getColor().equals("Empty Square")&& whiteRookRightCastle(myPosition)) {
+                                // System.out.println("nice");
+                                return true;
+                            }
+                        }
+                    } else if (myPosition == 60 && nextPosition == 56) {
+                        // System.out.println("right place");
+                        // System.out.println(kingSquare.getPiece().firstMove);
+                        // System.out.println(rookSquare.getPiece().firstMove);
+                        if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
+                            if (getBoardSquare(59).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(58).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(57).getPiece().getColor().equals("Empty Square")&& whiteRookLeftCastle(myPosition))
+                                return true;
+                        }
+                    }
+                } else {
+                    if (myPosition == 4 && nextPosition == 7) {
+                        if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
+                            if (getBoardSquare(5).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(6).getPiece().getColor().equals("Empty Square")&& blackRookRightCastle(myPosition)) {
+                                return true;
+                            }
+                        }
+                    } else if (myPosition == 4 && nextPosition == 0) {
+                        if (kingSquare.getPiece().firstMove && rookSquare.getPiece().firstMove) {
+                            if (getBoardSquare(3).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(2).getPiece().getColor().equals("Empty Square")
+                                    && getBoardSquare(1).getPiece().getColor().equals("Empty Square")&& blackRookLeftCastle(myPosition))
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+
+    public boolean whiteRookRightCastle(int myPosition) {
+        Piece king = getBoardSquare(myPosition).getPiece();
+        boolean kingAt61 = king.isKingSafeFromMyMove(myPosition, 61);
+        boolean kingAt62 = king.isKingSafeFromMyMove(myPosition, 62);
+        if (kingAt61 && kingAt62)
+            return true;
+        return false;
+    }
+
+    public boolean whiteRookLeftCastle(int myPosition) {
+        Piece king = getBoardSquare(myPosition).getPiece();
+        boolean kingAt59 = king.isKingSafeFromMyMove(myPosition, 59);
+        boolean kingAt58 = king.isKingSafeFromMyMove(myPosition, 58);
+        boolean kingAt57 = king.isKingSafeFromMyMove(myPosition, 57);
+        if (kingAt59 && kingAt58 && kingAt57)
+            return true;
+        return false;
+    }
+
+    public boolean blackRookRightCastle(int myPosition) {
+        Piece king = getBoardSquare(myPosition).getPiece();
+        boolean kingAt5 = king.isKingSafeFromMyMove(myPosition, 5);
+        boolean kingAt6 = king.isKingSafeFromMyMove(myPosition, 6);
+        if (kingAt5 && kingAt6)
+            return true;
+        return false;
+    }
+
+    public boolean blackRookLeftCastle(int myPosition) {
+        Piece king = getBoardSquare(myPosition).getPiece();
+        boolean kingAt3 = king.isKingSafeFromMyMove(myPosition, 3);
+        boolean kingAt2 = king.isKingSafeFromMyMove(myPosition, 2);
+        boolean kingAt1 = king.isKingSafeFromMyMove(myPosition, 1);
+        if (kingAt3 && kingAt2 && kingAt1)
+            return true;
+        return false;
+    }
+
 }

@@ -202,20 +202,14 @@ public class Pawn extends Piece {
                 // Black pawn is on the fifth rank
                 if (nextCol > 0 && board.getBoardSquare(nextPosition - 1).getPiece() instanceof Pawn &&
                         board.getBoardSquare(nextPosition - 1).getPiece().getColor().equals("White")) {
-                    // Opponent's pawn is to the left
-                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition - 1).getPiece();
-
-                    // Opponent's pawn is en passant eligible
+                  
                     setEnPassantEligible(true);
                     return true;
 
                 }
                 if (nextCol < 7 && board.getBoardSquare(nextPosition + 1).getPiece() instanceof Pawn &&
                         board.getBoardSquare(nextPosition + 1).getPiece().getColor().equals("White")) {
-                    // Opponent's pawn is to the right
-                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition + 1).getPiece();
-
-                    // Opponent's pawn is en passant eligible
+                  
                     setEnPassantEligible(true);
                     return true;
 
@@ -224,20 +218,14 @@ public class Pawn extends Piece {
                 // White pawn is on the fifth rank
                 if (nextCol > 0 && board.getBoardSquare(nextPosition - 1).getPiece() instanceof Pawn &&
                         board.getBoardSquare(nextPosition - 1).getPiece().getColor().equals("Black")) {
-                    // Opponent's pawn is to the left
-                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition - 1).getPiece();
-
-                    // Opponent's pawn is en passant eligible
+                   
                     setEnPassantEligible(true);
                     return true;
 
                 }
                 if (nextCol < 7 && board.getBoardSquare(nextPosition + 1).getPiece() instanceof Pawn &&
                         board.getBoardSquare(nextPosition + 1).getPiece().getColor().equals("Black")) {
-                    // Opponent's pawn is to the right
-                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition + 1).getPiece();
-
-                    // Opponent's pawn is en passant eligible
+                    
                     setEnPassantEligible(true);
                     return true;
 
