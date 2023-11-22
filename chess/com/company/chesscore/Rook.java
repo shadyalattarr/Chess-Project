@@ -12,12 +12,14 @@ public class Rook extends Piece {
 
     // need to create a get all valid moves method for each piece
     public boolean isValidMove(int myPosition, int nextPostion) {
+    
         int myRow = myPosition / 8;
         int myCol = myPosition % 8;
         int nextRow = nextPostion / 8;
         int nextCol = nextPostion % 8;
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
+      //  System.out.println((colDifference == 0 && rowDifference > 0));
         if ((rowDifference == 0 && colDifference > 0) || (colDifference == 0 && rowDifference > 0)) {
             firstMove = false;
             return true;

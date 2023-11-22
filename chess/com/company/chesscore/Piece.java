@@ -27,7 +27,9 @@ abstract public class Piece {
         Piece capturedPiece;
         boolean returnValue = false;
         capturedPiece = board.movePiece(myPosition, newPosition);
+       // System.out.println(capturedPiece.toString());
         //after movement is king safe? // need my king pos and my color
+     //   System.out.println(board.kingPosition[this.getColorNum()]);
         if(board.isMyKingSafe(board.kingPosition[this.getColorNum()], this.getColorNum()))
             {
                 returnValue = true;

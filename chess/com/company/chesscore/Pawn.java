@@ -3,10 +3,20 @@ package com.company.chesscore;
 import java.util.ArrayList;
 
 public class Pawn extends Piece {
+    private boolean enPassantEligible;
 
     public Pawn(int color, Board board) {
         setColor(color);
+        enPassantEligible = false;
         this.board = board;
+    }
+
+    public boolean isEnPassantEligible() {
+        return enPassantEligible;
+    }
+
+    public void setEnPassantEligible(boolean enPassantEligible) {
+        this.enPassantEligible = enPassantEligible;
     }
 
     // need to create a get all valid moves method for each piece
@@ -22,21 +32,18 @@ public class Pawn extends Piece {
             if (firstMove) {
                 // can go down 2 or 1 or diags
                 // nn check isillegal cuz first move
-                if (((rowDifference == -2 && colDifference == 0)
-                        && (board.getBoardSquare(nextPostion - 8).getPiece().getColor().equals("Empty Square")))
+                if (((rowDifference == -2 && colDifference == 0))
                         || ((rowDifference == -1 && colDifference == 0))) {
-                    firstMove = false;
+                    // firstMove = false;
                     return true;
                 }
             }
             // not first move
             if ((rowDifference == -1 && colDifference == 0)) {
                 return true;
-            } else if ((rowDifference == -1 && colDifference == 1)
-                    && (board.getBoardSquare(nextPostion).getPiece().getColor().equals("White"))) {
+            } else if ((rowDifference == -1 && colDifference == 1)) {
                 return true;
-            } else if ((rowDifference == -1 && colDifference == -1)
-                    && (board.getBoardSquare(nextPostion).getPiece().getColor().equals("White"))) {// SAME GOSE HERE
+            } else if ((rowDifference == -1 && colDifference == -1)) {// SAME GOSE HERE
                 return true;
             } else {
                 return false;
@@ -45,20 +52,17 @@ public class Pawn extends Piece {
 
             if (firstMove) {
 
-                if (((rowDifference == 2 && colDifference == 0)
-                        && (board.getBoardSquare(nextPostion + 8).getPiece().getColor().equals("Empty Square")))
+                if (((rowDifference == 2 && colDifference == 0))
                         || ((rowDifference == 1 && colDifference == 0))) {
-                    firstMove = false;
+                    // firstMove = false;
                     return true;
                 }
             }
             if ((rowDifference == 1 && colDifference == 0)) {
                 return true;
-            } else if ((rowDifference == 1 && colDifference == 1)
-                    && (board.getBoardSquare(nextPostion).getPiece().getColor().equals("Black"))) {
+            } else if ((rowDifference == 1 && colDifference == 1)) {
                 return true;
-            } else if ((rowDifference == 1 && colDifference == -1)
-                    && (board.getBoardSquare(nextPostion).getPiece().getColor().equals("Black"))) {
+            } else if ((rowDifference == 1 && colDifference == -1)) {
                 return true;
 
             } else {
@@ -117,6 +121,132 @@ public class Pawn extends Piece {
         return false;
     }
 
+    // check king is safe and change first move
+    public boolean captureEnPassant(int myPosition, int nextPostion) {
+
+        int myRow = myPosition / 8;
+        int myCol = myPosition % 8;
+        int nextRow = nextPostion / 8;
+        int nextCol = nextPostion % 8;
+        int colDifference = nextCol - myCol;
+        if (isValidMove(myPosition, nextPostion)) {
+           // System.out.println("kkk");
+            if (getColor().equals("White")) {
+               
+                if (colDifference == -1) {
+                   //  System.out.println("kkk");
+                    if (myRow == 3 && board.getBoardSquare(nextPostion).getPiece() instanceof EmptySquare
+                            && board.getBoardSquare(myPosition - 1).getPiece() instanceof Pawn) {
+                        Pawn opponentPawn = (Pawn) board.getBoardSquare(myPosition - 1).getPiece();
+                        if (opponentPawn.isEnPassantEligible()) {
+                            board.movePiece(myPosition, nextPostion);
+                            board.capture(opponentPawn);
+                            return true;
+                        }
+                    }
+                } else if (colDifference == 1) {
+                    if (myRow == 3 && board.getBoardSquare(nextPostion).getPiece() instanceof EmptySquare
+                            && board.getBoardSquare(myPosition + 1).getPiece() instanceof Pawn) {
+                        Pawn opponentPawn = (Pawn) board.getBoardSquare(myPosition + 1).getPiece();
+                        if (opponentPawn.isEnPassantEligible()) {
+                            board.movePiece(myPosition, nextPostion);
+                            board.capture(opponentPawn);
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                if (colDifference == -1) {
+                    if (myRow == 4 && board.getBoardSquare(nextPostion).getPiece() instanceof EmptySquare
+                            && board.getBoardSquare(myPosition - 1).getPiece() instanceof Pawn) {
+                        Pawn opponentPawn = (Pawn) board.getBoardSquare(myPosition - 1).getPiece();
+                        if (opponentPawn.isEnPassantEligible()) {
+                            board.movePiece(myPosition, nextPostion);
+                            board.capture(opponentPawn);
+                            return true;
+                        }
+                    }
+                } else if (colDifference == 1) {
+                    if (myRow == 4 && board.getBoardSquare(nextPostion).getPiece() instanceof EmptySquare
+                            && board.getBoardSquare(myPosition + 1).getPiece() instanceof Pawn) {
+                        Pawn opponentPawn = (Pawn) board.getBoardSquare(myPosition + 1).getPiece();
+                        if (opponentPawn.isEnPassantEligible()) {
+                            board.movePiece(myPosition, nextPostion);
+                            board.capture(opponentPawn);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public boolean isEnPassantCandidate(int myPosition, int nextPosition) {
+        int myRow = myPosition / 8;
+        int nextRow = nextPosition / 8;
+        int myCol = myPosition % 8;
+        int nextCol = nextPosition % 8;
+
+        int rowDifference = Math.abs(myRow - nextRow);
+        int colDifference = Math.abs(myCol - nextCol);
+        if (!firstMove)
+            return false;
+        // System.out.println(myPosition + " " + nextPosition);
+        if (rowDifference == 2 && colDifference == 0) {
+            // Move is a two-step forward move
+
+            if (getColor().equals("Black") && myRow == 1) {
+
+                // Black pawn is on the fifth rank
+                if (nextCol > 0 && board.getBoardSquare(nextPosition - 1).getPiece() instanceof Pawn &&
+                        board.getBoardSquare(nextPosition - 1).getPiece().getColor().equals("White")) {
+                    // Opponent's pawn is to the left
+                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition - 1).getPiece();
+
+                    // Opponent's pawn is en passant eligible
+                    setEnPassantEligible(true);
+                    return true;
+
+                }
+                if (nextCol < 7 && board.getBoardSquare(nextPosition + 1).getPiece() instanceof Pawn &&
+                        board.getBoardSquare(nextPosition + 1).getPiece().getColor().equals("White")) {
+                    // Opponent's pawn is to the right
+                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition + 1).getPiece();
+
+                    // Opponent's pawn is en passant eligible
+                    setEnPassantEligible(true);
+                    return true;
+
+                }
+            } else if (getColor().equals("White") && myRow == 6) {
+                // White pawn is on the fifth rank
+                if (nextCol > 0 && board.getBoardSquare(nextPosition - 1).getPiece() instanceof Pawn &&
+                        board.getBoardSquare(nextPosition - 1).getPiece().getColor().equals("Black")) {
+                    // Opponent's pawn is to the left
+                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition - 1).getPiece();
+
+                    // Opponent's pawn is en passant eligible
+                    setEnPassantEligible(true);
+                    return true;
+
+                }
+                if (nextCol < 7 && board.getBoardSquare(nextPosition + 1).getPiece() instanceof Pawn &&
+                        board.getBoardSquare(nextPosition + 1).getPiece().getColor().equals("Black")) {
+                    // Opponent's pawn is to the right
+                    // Pawn opponentPawn = (Pawn) board.getBoardSquare(nextPosition + 1).getPiece();
+
+                    // Opponent's pawn is en passant eligible
+                    setEnPassantEligible(true);
+                    return true;
+
+                }
+            }
+        }
+        return false;
+    }
+
     // fall in last col and first col
     @Override
     public ArrayList<String> getAllValidMovesFromPiece() {
@@ -130,7 +260,7 @@ public class Pawn extends Piece {
                     if (board.getBoardSquare(myPosition + 16).getPiece().getColor().equals("Empty Square")
                             && isKingSafeFromMyMove(myPosition, myPosition + 16))
                         validMoves.add(board.createMoveString(r, c, r + 2, c));// 2 fwd
-                    if(isKingSafeFromMyMove(myPosition, myPosition + 8))
+                    if (isKingSafeFromMyMove(myPosition, myPosition + 8))
                         validMoves.add(board.createMoveString(r, c, r + 1, c));// 1 fwd
                 }
                 if (board.getBoardSquare(myPosition + 7).getPiece().getColor().equals("White") && (c > 0)
@@ -141,14 +271,14 @@ public class Pawn extends Piece {
                     validMoves.add(board.createMoveString(r, c, r + 1, c + 1));
             } else {
                 // wjite first move go up
-                if (board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square")){
+                if (board.getBoardSquare(myPosition - 8).getPiece().getColor().equals("Empty Square")) {
                     {
 
                         if (board.getBoardSquare(myPosition - 16).getPiece().getColor().equals("Empty Square")
                                 && isKingSafeFromMyMove(myPosition, myPosition - 16))
                             validMoves.add(board.createMoveString(r, c, r - 2, c));
                     }
-                    if(isKingSafeFromMyMove(myPosition, myPosition - 8))
+                    if (isKingSafeFromMyMove(myPosition, myPosition - 8))
                         validMoves.add(board.createMoveString(r, c, r - 1, c));
                     if (board.getBoardSquare(myPosition - 7).getPiece().getColor().equals("Black") && (c < 7)
                             && isKingSafeFromMyMove(myPosition, myPosition - 7))
@@ -157,7 +287,7 @@ public class Pawn extends Piece {
                             && isKingSafeFromMyMove(myPosition, myPosition - 9))
                         validMoves.add(board.createMoveString(r, c, r - 1, c - 1));
                 }
-            
+
             }
         } else {// not first move
             if (getColorNum() == 0 && (r < 7)) {// black and not in end// if in end pawn promo
