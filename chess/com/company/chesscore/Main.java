@@ -39,7 +39,7 @@ public class Main {
             }
             System.out.println();
         }
-*/
+*/ 
         // testing if white king safe
         // Piece whiteKing = game1.getBoard().squares[7][3].getPiece();
         // System.out.println("from 31");
