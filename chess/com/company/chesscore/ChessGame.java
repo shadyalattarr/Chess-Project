@@ -430,6 +430,10 @@ public class ChessGame {
             return false;
 
     }
+    public ArrayList<String> getAllValidMovesFromSquare(int myPosition){
+        return board.getBoardSquare(myPosition).getPiece().getAllValidMovesFromPiece();
+
+    }
 
     /*
      * public static void main(String[] args) {
