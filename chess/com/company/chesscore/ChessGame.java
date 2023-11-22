@@ -320,10 +320,14 @@ public class ChessGame {
         // System.out.println(board.getBoardSquare(fromPosition).getPiece().toString());
         // System.out.println(fromPiece.isKingSafeFromMyMove(fromPosition, toPosition));
         // System.out.println(fromPiece.isValidMove(fromPosition, toPosition));
-        
+        if( fromPiece.isValidMove(fromPosition, toPosition) && fromPiece.checkPath(fromPosition, toPosition)
+                && fromPiece.isKingSafeFromMyMove(fromPosition, toPosition)){
+                    fromPiece.firstMove = false;
+                    return true;
+                }
+        return false;
 
-        return fromPiece.isValidMove(fromPosition, toPosition) && fromPiece.checkPath(fromPosition, toPosition)
-                && fromPiece.isKingSafeFromMyMove(fromPosition, toPosition);
+        
 
     }
 

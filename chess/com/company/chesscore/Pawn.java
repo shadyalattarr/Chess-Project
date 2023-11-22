@@ -191,8 +191,8 @@ public class Pawn extends Piece {
 
         int rowDifference = Math.abs(myRow - nextRow);
         int colDifference = Math.abs(myCol - nextCol);
-        if (!firstMove)
-            return false;
+        // if (!firstMove)
+        //     return false;
         // System.out.println(myPosition + " " + nextPosition);
         if (rowDifference == 2 && colDifference == 0) {
             // Move is a two-step forward move
