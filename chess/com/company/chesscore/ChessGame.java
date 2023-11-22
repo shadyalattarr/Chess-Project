@@ -32,22 +32,17 @@ public class ChessGame {
         switch (stringPiece) {
             case 'K':
                 newPiece = new Knight(player, this.board);
-                System.out.println("promoted to knight");
                 break;
             case 'B':
                 newPiece = new Bishop(player, this.board);
-                System.out.println("promoted to bishop");
                 break;
             case 'R':
                 newPiece = new Rook(player, this.board);
-                System.out.println("promoted to rook");
                 break;
             case 'Q':
                 newPiece = new Queen(player, this.board);
-                System.out.println("promoted to queen");
                 break;
             default:
-                System.out.println("no promotion lmfao");
                 newPiece = new EmptySquare();// if we sent an empty square then no promo
                 break;
         }
@@ -127,8 +122,8 @@ public class ChessGame {
         for (String move : inputMoves) {
             // need to split each move to from and to
             // System.out.println(player);
-            System.out.println(move);
-            board.printBoard();
+            //System.out.println(move);
+            //board.printBoard();
             
             try {
                 if (gameOn) {
@@ -156,8 +151,6 @@ public class ChessGame {
                             || board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)// if empty or not my
                                                                                                  // color
                     {
-                        System.out.println(player);
-                        System.out.println(board.getBoardSquare(fromPosition).getPiece().getColorNum());
                         throw new NotAccessiblePiece();
                     } else {// ur color
 
@@ -168,7 +161,7 @@ public class ChessGame {
 
                         fromPiece = board.getBoardSquare(fromPosition).getPiece();
                         toPiece = board.getBoardSquare(toPosition).getPiece();
-
+                        //System.out.println("from piece: "+ fromPiece + " to Piece: "+toPiece);
                         // System.out.println(fromPosition + " " + toPosition);
                         // System.out.println(kingInCheck[player]);
                         // System.out.println("king");
@@ -197,6 +190,7 @@ public class ChessGame {
                                 } else if (this.isValidMove(fromPosition, toPosition)) {
                                     boolean h = pawn.isEnPassantCandidate(fromPosition, toPosition);
                                     // System.out.println(h);
+                                    
                                     capturedPiece = board.movePiece(fromPosition, toPosition);
                                     board.capture(capturedPiece);// for array list
                                     // if(capturedPiece instanceof Pawn)
@@ -206,8 +200,17 @@ public class ChessGame {
                                     // movement done
 
                                     if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
-                                        System.out.println("Captured " + getPieceString(capturedPiece));
+                                        {System.out.println("Captured " + getPieceString(capturedPiece));}
                                     // now need to check if king in check
+                                    
+                                   // System.out.println("it is a pawn");
+                                    Piece newP = promotionPiece(promoteTo);
+                                   // System.out.println("promotion piece is "+ promoteTo);
+                                    if(newP.getColorNum() != -1)//empty square // meaning invalid entry
+                                    {
+                                        promotePawn(toPosition, newP);    
+                                    }
+                                    
                                 } else {
                                     // System.out.println("move not vald frmo ours");
                                     throw new InvalidMove();
@@ -235,20 +238,14 @@ public class ChessGame {
                                 // movement done
 
                                 if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
-                                    System.out.println("Captured " + getPieceString(capturedPiece));
+                                    {
+
+                                        System.out.println("Captured " + getPieceString(capturedPiece));
+                                        
+                                    }
                                 // might have been promotion
                                 //check of afer move the piece is pawn
-                                System.out.println("is it a pawn?  " + board.getBoardSquare(toPosition).getPiece());
-                                if(board.getBoardSquare(toPosition).getPiece() instanceof Pawn)
-                                {
-                                    System.out.println("it is a pawn");
-                                    Piece newP = promotionPiece(promoteTo);
-                                    System.out.println("promotion piece is "+ promoteTo);
-                                    if(newP.getColorNum() != -1)//empty square // meaning invalid entry
-                                    {
-                                        promotePawn(toPosition, newP);    
-                                    }
-                                }
+                                
                             } else {
                                 // System.out.println("move not vald frmo ours");
                                 throw new InvalidMove();
@@ -354,7 +351,7 @@ public class ChessGame {
         {
             if(board.piecesArray.get(color).get(i) == pawnToPromote)
             {
-                System.out.println(" promoted in array");
+                //System.out.println(" promoted in array");
                 board.piecesArray.get(color).set(i,newP);
                 break;
             }
