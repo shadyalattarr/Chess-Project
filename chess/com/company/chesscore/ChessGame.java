@@ -127,8 +127,9 @@ public class ChessGame {
         for (String move : inputMoves) {
             // need to split each move to from and to
             // System.out.println(player);
-            // board.printBoard();
-            // System.out.println(move);
+            System.out.println(move);
+            board.printBoard();
+            
             try {
                 if (gameOn) {
                     fromTo = move.split(",");
@@ -237,9 +238,12 @@ public class ChessGame {
                                     System.out.println("Captured " + getPieceString(capturedPiece));
                                 // might have been promotion
                                 //check of afer move the piece is pawn
+                                System.out.println("is it a pawn?  " + board.getBoardSquare(toPosition).getPiece());
                                 if(board.getBoardSquare(toPosition).getPiece() instanceof Pawn)
                                 {
+                                    System.out.println("it is a pawn");
                                     Piece newP = promotionPiece(promoteTo);
+                                    System.out.println("promotion piece is "+ promoteTo);
                                     if(newP.getColorNum() != -1)//empty square // meaning invalid entry
                                     {
                                         promotePawn(toPosition, newP);    
