@@ -26,7 +26,7 @@ public class ChessGame {
 
     }
 
-    public Piece promotionPiece(int toPosition, char stringPiece) {
+    public Piece promotionPiece(char stringPiece) {
         // lazem setpositio b setpiece
         Piece newPiece;
         switch (stringPiece) {
@@ -235,7 +235,16 @@ public class ChessGame {
 
                                 if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
                                     System.out.println("Captured " + getPieceString(capturedPiece));
-                                // now need to check if king in check
+                                // might have been promotion
+                                //check of afer move the piece is pawn
+                                if(board.getBoardSquare(toPosition).getPiece() instanceof Pawn)
+                                {
+                                    Piece newP = promotionPiece(promoteTo);
+                                    if(newP.getColorNum() != -1)//empty square // meaning invalid entry
+                                    {
+                                        promotePawn(toPosition, newP);    
+                                    }
+                                }
                             } else {
                                 // System.out.println("move not vald frmo ours");
                                 throw new InvalidMove();
@@ -334,25 +343,37 @@ public class ChessGame {
         return false;
 
     }
-
-    // before i call this method isValied and checkPath should be called
-    public boolean promotePawn(int myPosition, int nextPosition, Piece newPiece) {
-        BoardSquare promotionSquare = board.getBoardSquare(nextPosition);
-        Piece oldPiece = board.getBoardSquare(myPosition).getPiece();
-
-        if (oldPiece instanceof Pawn) {
-            int row = nextPosition / 8;
-
-            // Check if the pawn reached the end of the board
-            if (oldPiece.getColor().equals("White") && row == 0) {
-                promotionSquare.setPiece(newPiece);
-                return true;
-            } else if (oldPiece.getColor().equals("Black") && row == 7) {
-                promotionSquare.setPiece(newPiece);
-                return true;
+    public void promotePawnInArray(Piece pawnToPromote,Piece newP)
+    {
+        int color = pawnToPromote.getColorNum();
+        for(int i =0;i<board.piecesArray.get(color).size();i++)
+        {
+            if(board.piecesArray.get(color).get(i) == pawnToPromote)
+            {
+                System.out.println(" promoted in array");
+                board.piecesArray.get(color).set(i,newP);
+                break;
             }
         }
-        return false;
+    }
+    // before i call this method isValied and checkPath should be called
+    public void promotePawn(int finalPosition, Piece newPiece) {
+        BoardSquare promotionSquare = board.getBoardSquare(finalPosition);//pawn here
+        Piece oldPiece = promotionSquare.getPiece();
+
+        //nn check if pawn  
+        int row = finalPosition / 8;
+
+        //replace pawn with newPiece in array
+        promotePawnInArray(oldPiece, newPiece);
+        // Check if the pawn reached the end of the board
+
+        if (oldPiece.getColor().equals("White") && row == 0) {
+            promotionSquare.setPiece(newPiece);
+        } else if (oldPiece.getColor().equals("Black") && row == 7) {
+            promotionSquare.setPiece(newPiece);
+        }
+    
     }
 
     // just needs to check isKingSafe

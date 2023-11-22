@@ -326,7 +326,7 @@ public class Pawn extends Piece {
                     && isKingSafeFromMyMove(myPosition, myPosition - 7)) {
                 Pawn opponentPawn = (Pawn) board.getBoardSquare(myPosition + 1).getPiece();
                 if (opponentPawn.isEnPassantEligible()) {
-                    validMoves.add(board.createMoveString(r, c, r + 1, c - 1));
+                    validMoves.add(board.createMoveString(r, c, r - 1, c + 1));
                 }
             }
 
