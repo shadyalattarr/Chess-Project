@@ -185,7 +185,7 @@ public class ChessGame {
                         else if (fromPiece instanceof Pawn) {
                             //System.out.println(fromPosition + " " + toPosition);
                             if (!fromPiece.isKingSafeFromMyMove(fromPosition, toPosition)) {
-                                System.out.println("move not vald frmo ours");
+                                //System.out.println("move not vald frmo ours");
                                 throw new InvalidMove();
                             } else {
                                 Pawn pawn = (Pawn) fromPiece;
@@ -272,6 +272,13 @@ public class ChessGame {
                                 gameOn = false;
                             }
 
+                        }
+                        
+                        for (Piece enemyPiece : board.piecesArray.get(otherPlayer)) {
+                            if(enemyPiece instanceof Pawn)
+                            {
+                                ((Pawn) enemyPiece).setEnPassantEligible(false);
+                            }
                         }
                         if (player == 0)
                             player = 1;

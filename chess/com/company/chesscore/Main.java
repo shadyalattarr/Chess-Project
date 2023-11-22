@@ -7,7 +7,7 @@ public class Main {
         // sum things are static we can call them directly by game1.getBoard().getBoardSquare(0)
         ChessGame game1 = new ChessGame();
         game1.startGame();
-        
+            
         
         
         
