@@ -236,12 +236,13 @@ public class ChessGame {
                                 if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
                                     System.out.println("Captured " + getPieceString(capturedPiece));
                                 // might have been promotion
-                                // check of afer move the piece is pawn
-                                if (board.getBoardSquare(toPosition).getPiece() instanceof Pawn) {
+                                //check of afer move the piece is pawn
+                                if(board.getBoardSquare(toPosition).getPiece() instanceof Pawn)
+                                {
                                     Piece newP = promotionPiece(promoteTo);
-                                    if (newP.getColorNum() != -1)// empty square // meaning invalid entry
+                                    if(newP.getColorNum() != -1)//empty square // meaning invalid entry
                                     {
-                                        promotePawn(toPosition, newP);
+                                        promotePawn(toPosition, newP);    
                                     }
                                 }
                             } else {
@@ -342,27 +343,28 @@ public class ChessGame {
         return false;
 
     }
-
-    public void promotePawnInArray(Piece pawnToPromote, Piece newP) {
+    public void promotePawnInArray(Piece pawnToPromote,Piece newP)
+    {
         int color = pawnToPromote.getColorNum();
-        for (int i = 0; i < board.piecesArray.get(color).size(); i++) {
-            if (board.piecesArray.get(color).get(i) == pawnToPromote) {
+        for(int i =0;i<board.piecesArray.get(color).size();i++)
+        {
+            if(board.piecesArray.get(color).get(i) == pawnToPromote)
+            {
                 System.out.println(" promoted in array");
-                board.piecesArray.get(color).set(i, newP);
+                board.piecesArray.get(color).set(i,newP);
                 break;
             }
         }
     }
-
     // before i call this method isValied and checkPath should be called
     public void promotePawn(int finalPosition, Piece newPiece) {
-        BoardSquare promotionSquare = board.getBoardSquare(finalPosition);// pawn here
+        BoardSquare promotionSquare = board.getBoardSquare(finalPosition);//pawn here
         Piece oldPiece = promotionSquare.getPiece();
 
-        // nn check if pawn
+        //nn check if pawn  
         int row = finalPosition / 8;
 
-        // replace pawn with newPiece in array
+        //replace pawn with newPiece in array
         promotePawnInArray(oldPiece, newPiece);
         // Check if the pawn reached the end of the board
 
@@ -371,7 +373,7 @@ public class ChessGame {
         } else if (oldPiece.getColor().equals("Black") && row == 7) {
             promotionSquare.setPiece(newPiece);
         }
-
+    
     }
 
     // just needs to check isKingSafe
@@ -426,25 +428,6 @@ public class ChessGame {
         } else
             return false;
 
-    }
-
-    public ArrayList<String> getAllValidMovesFromSquare(int myPosition) {
-        ArrayList<String> validMoves = new ArrayList<String>();
-        Piece myPiece = board.getBoardSquare(myPosition).getPiece();
-        if (myPiece instanceof Pawn) {
-            validMoves = ((Pawn) myPiece).getAllValidMovesFromPiece();
-        } else if (myPiece instanceof Rook) {
-            validMoves = ((Rook) myPiece).getAllValidMovesFromPiece();
-        } else if (myPiece instanceof Knight) {
-            validMoves = ((Knight) myPiece).getAllValidMovesFromPiece();
-        } else if (myPiece instanceof Bishop) {
-            validMoves = ((Bishop) myPiece).getAllValidMovesFromPiece();
-        } else if (myPiece instanceof Queen) {
-            validMoves = ((Queen) myPiece).getAllValidMovesFromPiece();
-        } else if (myPiece instanceof King) {
-            validMoves = ((King) myPiece).getAllValidMovesFromPiece();
-        }
-        return validMoves;
     }
 
     /*
