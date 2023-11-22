@@ -141,6 +141,7 @@ public class Pawn extends Piece {
                         if (opponentPawn.isEnPassantEligible()) {
                             board.movePiece(myPosition, nextPostion);
                             board.capture(opponentPawn);
+                            board.getBoardSquare(myPosition - 1).setPiece(new EmptySquare());
                             return true;
                         }
                     }
@@ -151,6 +152,7 @@ public class Pawn extends Piece {
                         if (opponentPawn.isEnPassantEligible()) {
                             board.movePiece(myPosition, nextPostion);
                             board.capture(opponentPawn);
+                            board.getBoardSquare(myPosition + 1).setPiece(new EmptySquare());
                             return true;
                         }
                     }
@@ -163,6 +165,7 @@ public class Pawn extends Piece {
                         if (opponentPawn.isEnPassantEligible()) {
                             board.movePiece(myPosition, nextPostion);
                             board.capture(opponentPawn);
+                            board.getBoardSquare(myPosition - 1).setPiece(new EmptySquare());
                             return true;
                         }
                     }
@@ -173,6 +176,7 @@ public class Pawn extends Piece {
                         if (opponentPawn.isEnPassantEligible()) {
                             board.movePiece(myPosition, nextPostion);
                             board.capture(opponentPawn);
+                            board.getBoardSquare(myPosition + 1).setPiece(new EmptySquare());
                             return true;
                         }
                     }

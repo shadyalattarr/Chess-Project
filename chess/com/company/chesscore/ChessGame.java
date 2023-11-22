@@ -122,8 +122,8 @@ public class ChessGame {
         for (String move : inputMoves) {
             // need to split each move to from and to
             // System.out.println(player);
-            System.out.println(move);
-            board.printBoard();
+            //System.out.println(move);
+            //board.printBoard();
             
             try {
                 if (gameOn) {
@@ -143,6 +143,7 @@ public class ChessGame {
                     toPosition = board.getIntPosition(toRow, toCol);
                     if (promoteTo != 'n' && !(board.getBoardSquare(fromPosition).getPiece() instanceof Pawn))// promo
                     {
+                        System.out.println("smth wierd");
                         throw new InvalidMove();
                     }
                     // we have from and to and they are not illegal
@@ -151,6 +152,7 @@ public class ChessGame {
                             || board.getBoardSquare(fromPosition).getPiece().getColorNum() == -1)// if empty or not my
                                                                                                  // color
                     {
+                        System.out.println("not ur piece");
                         throw new NotAccessiblePiece();
                     } else {// ur color
 
@@ -179,7 +181,7 @@ public class ChessGame {
                         else if (fromPiece instanceof Pawn) {
                             // System.out.println(fromPosition + " " + toPosition);
                             if (!fromPiece.isKingSafeFromMyMove(fromPosition, toPosition)) {
-                                // System.out.println("move not vald frmo ours");
+                                System.out.println("move not vald frmo ours");
                                 throw new InvalidMove();
                             } else {
                                 Pawn pawn = (Pawn) fromPiece;
@@ -212,7 +214,7 @@ public class ChessGame {
                                     }
                                     
                                 } else {
-                                    // System.out.println("move not vald frmo ours");
+                                    System.out.println("move noooooooot vald frmo ours");
                                     throw new InvalidMove();
                                 }
                             }
@@ -247,7 +249,7 @@ public class ChessGame {
                                 //check of afer move the piece is pawn
                                 
                             } else {
-                                // System.out.println("move not vald frmo ours");
+                                System.out.println("move notoodoodododododsss ours");
                                 throw new InvalidMove();
                             }
                         }
@@ -331,6 +333,9 @@ public class ChessGame {
     public boolean isValidMove(int fromPosition, int toPosition) {
 
         Piece fromPiece = board.getBoardSquare(fromPosition).getPiece();
+       // System.out.println(fromPiece);
+       // System.out.println(fromPiece.isValidMove(fromPosition, toPosition));
+       // System.out.println(fromPiece.checkPath(fromPosition, toPosition));
         // System.out.println(fromPiece.toString());
         // System.out.println(fromPosition + " "+ toPosition);
         // System.out.println(board.getBoardSquare(fromPosition).getPiece().toString());
