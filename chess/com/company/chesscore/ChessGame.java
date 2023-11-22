@@ -122,8 +122,8 @@ public class ChessGame {
         for (String move : inputMoves) {
             // need to split each move to from and to
             // System.out.println(player);
-            //System.out.println(move);
-            //board.printBoard();
+            System.out.println(move);
+            board.printBoard();
             
             try {
                 if (gameOn) {
