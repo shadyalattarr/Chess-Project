@@ -23,7 +23,7 @@ public class King extends Piece {
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
         if (rowDifference <= 1 && colDifference <= 1) {
-            firstMove = false;
+            // firstMove = false;
             return true;// 7araka sa7
         }
         return false;
@@ -50,7 +50,7 @@ public class King extends Piece {
         int colDifference = (int) Math.abs(myCol - nextCol);
         boolean isRookFirstMove = board.getBoardSquare(nextPostion).getPiece().firstMove;
         if (rowDifference == 0 && colDifference >= 2 && firstMove && isRookFirstMove) {// need check rook first move?
-            this.setFirstMove(false);
+            // this.setFirstMove(false);
             board.getBoardSquare(nextPostion).getPiece().setFirstMove(false);
             return true;
         }

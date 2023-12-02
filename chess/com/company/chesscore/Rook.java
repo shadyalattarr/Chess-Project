@@ -3,25 +3,24 @@ package com.company.chesscore;
 import java.util.ArrayList;
 
 public class Rook extends Piece {
-   
 
-    public Rook(int color,Board board) {
+    public Rook(int color, Board board) {
         setColor(color);
         this.board = board;
     }
 
     // need to create a get all valid moves method for each piece
     public boolean isValidMove(int myPosition, int nextPostion) {
-    
+
         int myRow = myPosition / 8;
         int myCol = myPosition % 8;
         int nextRow = nextPostion / 8;
         int nextCol = nextPostion % 8;
         int rowDifference = (int) Math.abs(myRow - nextRow);
         int colDifference = (int) Math.abs(myCol - nextCol);
-      //  System.out.println((colDifference == 0 && rowDifference > 0));
+        // System.out.println((colDifference == 0 && rowDifference > 0));
         if ((rowDifference == 0 && colDifference > 0) || (colDifference == 0 && rowDifference > 0)) {
-            firstMove = false;
+            // firstMove = false;
             return true;
         }
         return false;
@@ -83,27 +82,27 @@ public class Rook extends Piece {
                     newC = c + temp * j;
                     if (board.isIllegal(newR, newC))// reach end of board
                         throw new IllegalArgumentException();
-                    newPosition = board.getIntPosition(newR,newC);
+                    newPosition = board.getIntPosition(newR, newC);
                     while (board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum() == -1)// while
                                                                                                                  // empy
                                                                                                                  // sqr
                     {
                         // need to check if king is safe
-                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                        if (isKingSafeFromMyMove(myPosition, newPosition))
                             validMoves.add(board.createMoveString(r, c, newR, newC));
                         temp++;
                         newR = r + temp * i;
                         newC = c + temp * j;
                         if (board.isIllegal(newR, newC))// reach end of board
                             throw new IllegalArgumentException();
-                        newPosition = board.getIntPosition(newR,newC);
+                        newPosition = board.getIntPosition(newR, newC);
                     }
                     // reaching this means we hit a piece @newRnewC
                     if (board.getBoardSquare(board.getIntPosition(newR, newC)).getPiece().getColorNum() != this
                             .getColorNum()) {
                         // oppo color, can capture
                         // need to check if king is safe
-                        if(isKingSafeFromMyMove(myPosition, newPosition))
+                        if (isKingSafeFromMyMove(myPosition, newPosition))
                             validMoves.add(board.createMoveString(r, c, newR, newC));
                     }
                     // end of possible path here, change path

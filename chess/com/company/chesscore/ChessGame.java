@@ -122,9 +122,9 @@ public class ChessGame {
         for (String move : inputMoves) {
             // need to split each move to from and to
             // System.out.println(player);
-            //System.out.println(move);
-            //board.printBoard();
-            
+            // System.out.println(move);
+            // board.printBoard();
+
             try {
                 if (gameOn) {
                     fromTo = move.split(",");
@@ -161,7 +161,7 @@ public class ChessGame {
 
                         fromPiece = board.getBoardSquare(fromPosition).getPiece();
                         toPiece = board.getBoardSquare(toPosition).getPiece();
-                        //System.out.println("from piece: "+ fromPiece + " to Piece: "+toPiece);
+                        // System.out.println("from piece: "+ fromPiece + " to Piece: "+toPiece);
                         // System.out.println(fromPosition + " " + toPosition);
                         // System.out.println(kingInCheck[player]);
                         // System.out.println("king");
@@ -189,7 +189,7 @@ public class ChessGame {
                                 } else if (this.isValidMove(fromPosition, toPosition)) {
                                     boolean h = pawn.isEnPassantCandidate(fromPosition, toPosition);
                                     // System.out.println(h);
-                                    
+
                                     capturedPiece = board.movePiece(fromPosition, toPosition);
                                     board.capture(capturedPiece);// for array list
                                     // if(capturedPiece instanceof Pawn)
@@ -199,17 +199,19 @@ public class ChessGame {
                                     // movement done
 
                                     if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
-                                        {System.out.println("Captured " + getPieceString(capturedPiece));}
-                                    // now need to check if king in check
-                                    
-                                   // System.out.println("it is a pawn");
-                                    Piece newP = promotionPiece(promoteTo);
-                                   // System.out.println("promotion piece is "+ promoteTo);
-                                    if(newP.getColorNum() != -1)//empty square // meaning invalid entry
                                     {
-                                        promotePawn(toPosition, newP);    
+                                        System.out.println("Captured " + getPieceString(capturedPiece));
                                     }
-                                    
+                                    // now need to check if king in check
+
+                                    // System.out.println("it is a pawn");
+                                    Piece newP = promotionPiece(promoteTo);
+                                    // System.out.println("promotion piece is "+ promoteTo);
+                                    if (newP.getColorNum() != -1)// empty square // meaning invalid entry
+                                    {
+                                        promotePawn(toPosition, newP);
+                                    }
+
                                 } else {
                                     throw new InvalidMove();
                                 }
@@ -236,18 +238,20 @@ public class ChessGame {
                                 // movement done
 
                                 if (capturedPiece.getColorNum() == otherPlayer)// either equals other color or -1
-                                    {
+                                {
 
-                                        System.out.println("Captured " + getPieceString(capturedPiece));
-                                        
-                                    }
+                                    System.out.println("Captured " + getPieceString(capturedPiece));
+
+                                }
                                 // might have been promotion
-                                //check of afer move the piece is pawn
-                                
+                                // check of afer move the piece is pawn
+
                             } else {
                                 throw new InvalidMove();
                             }
                         }
+                        // System.out.println();
+                        // board.printBoard();
                         // did a king become in check
                         // if you white your move makes the other dude in check
                         kingInCheck[otherPlayer] = !board.isMyKingSafe(board.kingPosition[otherPlayer], otherPlayer);
@@ -328,9 +332,9 @@ public class ChessGame {
     public boolean isValidMove(int fromPosition, int toPosition) {
 
         Piece fromPiece = board.getBoardSquare(fromPosition).getPiece();
-       // System.out.println(fromPiece);
-       // System.out.println(fromPiece.isValidMove(fromPosition, toPosition));
-       // System.out.println(fromPiece.checkPath(fromPosition, toPosition));
+        // System.out.println(fromPiece);
+        // System.out.println(fromPiece.isValidMove(fromPosition, toPosition));
+        // System.out.println(fromPiece.checkPath(fromPosition, toPosition));
         // System.out.println(fromPiece.toString());
         // System.out.println(fromPosition + " "+ toPosition);
         // System.out.println(board.getBoardSquare(fromPosition).getPiece().toString());
@@ -344,28 +348,27 @@ public class ChessGame {
         return false;
 
     }
-    public void promotePawnInArray(Piece pawnToPromote,Piece newP)
-    {
+
+    public void promotePawnInArray(Piece pawnToPromote, Piece newP) {
         int color = pawnToPromote.getColorNum();
-        for(int i =0;i<board.piecesArray.get(color).size();i++)
-        {
-            if(board.piecesArray.get(color).get(i) == pawnToPromote)
-            {
-                //System.out.println(" promoted in array");
-                board.piecesArray.get(color).set(i,newP);
+        for (int i = 0; i < board.piecesArray.get(color).size(); i++) {
+            if (board.piecesArray.get(color).get(i) == pawnToPromote) {
+                // System.out.println(" promoted in array");
+                board.piecesArray.get(color).set(i, newP);
                 break;
             }
         }
     }
+
     // before i call this method isValied and checkPath should be called
     public void promotePawn(int finalPosition, Piece newPiece) {
-        BoardSquare promotionSquare = board.getBoardSquare(finalPosition);//pawn here
+        BoardSquare promotionSquare = board.getBoardSquare(finalPosition);// pawn here
         Piece oldPiece = promotionSquare.getPiece();
 
-        //nn check if pawn  
+        // nn check if pawn
         int row = finalPosition / 8;
 
-        //replace pawn with newPiece in array
+        // replace pawn with newPiece in array
         promotePawnInArray(oldPiece, newPiece);
         // Check if the pawn reached the end of the board
 
@@ -374,7 +377,7 @@ public class ChessGame {
         } else if (oldPiece.getColor().equals("Black") && row == 7) {
             promotionSquare.setPiece(newPiece);
         }
-    
+
     }
 
     // just needs to check isKingSafe
@@ -430,7 +433,8 @@ public class ChessGame {
             return false;
 
     }
-    public ArrayList<String> getAllValidMovesFromSquare(int myPosition){
+
+    public ArrayList<String> getAllValidMovesFromSquare(int myPosition) {
         return board.getBoardSquare(myPosition).getPiece().getAllValidMovesFromPiece();
 
     }
