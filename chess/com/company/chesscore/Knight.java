@@ -79,5 +79,7 @@ public class Knight extends Piece {
             }        
         return validMoves;
     }
-
+    public String pieceName() {
+        return translateColor(getColorNum())+"Knight";
+    }
 }

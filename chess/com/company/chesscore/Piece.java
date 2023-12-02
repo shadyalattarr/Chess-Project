@@ -19,7 +19,7 @@ abstract public class Piece {
     abstract boolean isValidMove(int myPosition,int nextPostion);//a move that puts the king in danger
     //need to create a get all valid moves method for each piece
     //tye is string? array of string more like a list to be dynamic?
-
+    public abstract String pieceName();
     //tostring shuld be deleted ith
     public boolean isKingSafeFromMyMove(int myPosition,int newPosition)
     {
@@ -59,7 +59,7 @@ abstract public class Piece {
         return translateColor(this.color);
     }
 
-    private String translateColor(int color)
+    public String translateColor(int color)
     {
         if(color==1)//1
             return "White";
@@ -67,6 +67,7 @@ abstract public class Piece {
             return "Black";//else is 0
         return "Empty Square";
     }
+    
 
 
     abstract public ArrayList<String> getAllValidMovesFromPiece();

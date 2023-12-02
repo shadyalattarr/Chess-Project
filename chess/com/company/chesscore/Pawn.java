@@ -362,5 +362,7 @@ public class Pawn extends Piece {
     public void setFirstMove(boolean firstMove) {
         this.firstMove = firstMove;
     }
-
+    public String pieceName() {
+        return translateColor(getColorNum())+"Pawn";
+    }
 }

@@ -115,5 +115,8 @@ public class Rook extends Piece {
         return validMoves;
 
     }
+    public String pieceName() {
+        return translateColor(getColorNum())+"Rook";
+    }
 
 }

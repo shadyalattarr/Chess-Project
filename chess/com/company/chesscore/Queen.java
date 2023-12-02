@@ -118,5 +118,8 @@ public class Queen extends Piece {
 
         return validMoves;
     }
+    public String pieceName() {
+        return translateColor(getColorNum())+"Queen";
+    }
     
 }   

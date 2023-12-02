@@ -116,4 +116,7 @@ public class Bishop extends Piece {
 
         return validMoves;
     }
+    public String pieceName() {
+        return translateColor(getColorNum())+"Bishop";
+    }
 }

@@ -114,4 +114,7 @@ public class King extends Piece {
             return "a";
         return "A";
     }
+    public String pieceName (){
+        return translateColor(getColorNum())+"King";
+    }
 }

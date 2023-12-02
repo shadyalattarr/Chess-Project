@@ -34,4 +34,8 @@ public class EmptySquare extends Piece{
         ArrayList<String> valudMoves = new ArrayList<String>();
         return  valudMoves;//lazem keda send empty list
     }
+    public String pieceName()
+    {
+        return "EmptySquare";
+    }
 }
