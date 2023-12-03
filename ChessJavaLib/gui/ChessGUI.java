@@ -29,40 +29,42 @@ public class ChessGUI extends JFrame {
         // this.board = game.getBoard();
         this.fromSquare = null;
         this.toSquare = null;
-        this.fileDestantion = "D:\\Study\\Prog\\ChessJavaLib\\";
+        this.fileDestantion = "C:\\Users\\reda\\Desktop\\Programming\\Chess-Project\\ChessJavaLib\\";
         this.frame = new JFrame("Chess");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(8 * Tile_Size, 8 * Tile_Size);
         this.frame.setLayout(new GridLayout(8, 8));
-        this.setTiles();
+        this.setTiles();//sets tiles board and with its pieces
         frame.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 int x = e.getX() / Tile_Size;
                 int y = e.getY() / Tile_Size;
-                if (fromSquare == null) {
+                //x and y are click posiiotn
+                if (fromSquare == null) {//if this first click
 
-                    fromSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);
+                    fromSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);//need change
                     List<Square> moves = game.getAllValidMovesFromSquare(fromSquare);
-                    if (moves.size() == 0) {
+                    if (moves.size() == 0) {//no mves available
                         fromSquare = null;
-                        JOptionPane.showMessageDialog(null, "No valid moves for this piece");
+                        JOptionPane.showMessageDialog(null, "No valid moves for this piece");//ith we need to remove this?
                     } else {
                         highlightSquares(moves);
 
                     }
 
-                } else {
-                    toSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);
+                } else {//fromsquare decided and to square required
+                    //this click now is the to square
+                    toSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);//need change
 
                     Move move = new Move(fromSquare, toSquare);
                     if (game.isValidMove(move)) {
                         // if(game.hasPieceIn(toSquare))
                         // JOptionPane.showMessageDialog(null, game.getPieceName(toSquare) + " IS
                         // CAPTURED");
-                        game.makeMove(move);
-                        frame.getContentPane().removeAll();
-                        setTiles();
+                        game.makeMove(move);//made move in board
+                        frame.getContentPane().removeAll();//fadi el frame
+                        setTiles();//resetting it
                         frame.revalidate();
                         frame.repaint();
                     } else {
@@ -120,7 +122,7 @@ public class ChessGUI extends JFrame {
 
     private void highlightSquares(List<Square> squares) {
         for (Square square : squares) {
-            int index = 8 * (7 - square.getRank().getValue()) + square.getFile().getValue();
+            int index = 8 * (7 - square.getRank().getValue()) + square.getFile().getValue();//ith this need change?
             JPanel panel = (JPanel) frame.getContentPane().getComponent(index);
             panel.setBackground(new Color(162, 255, 134));
         }
@@ -144,23 +146,23 @@ public class ChessGUI extends JFrame {
                     panel.setBackground(new Color(255, 253, 228));
                 }
             }
-            BoardFile file = BoardFile.values()[i % 8];
-            BoardRank rank = BoardRank.values()[7 - i / 8];
+            BoardFile file = BoardFile.values()[i % 8];//cols
+            BoardRank rank = BoardRank.values()[7 - i / 8];//rows 
             Square square = new Square(file, rank);
-            if (game.getBoard().getPieceAtSquare(square) != null) {
-                try {
+            if (game.getBoard().getPieceAtSquare(square) != null) {//if not empty
+                try {//add an image.. piece in gui
                     BufferedImage image = ImageIO
-                            .read(new File(fileDestantion + game.getPieceName(square) + ".png"));
+                            .read(new File(game.getPieceName(square) + ".png"));//depending on the peice
                     if (image != null) {
                         Image scaledImage = image.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
                         JLabel piece = new JLabel(new ImageIcon(scaledImage));
                         panel.add(piece);
                     } else {
-                        System.out.println("Image is not found");
+                        System.out.println("Image is not found");//msh haye7sal isA
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    System.err.println("Error loading image: " + e.getMessage());
+                    System.err.println("Error loading image: " + e.getMessage());//same
                 }
             }
         }
