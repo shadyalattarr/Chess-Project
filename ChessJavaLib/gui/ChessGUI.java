@@ -21,7 +21,7 @@ public class ChessGUI extends JFrame {
     // private ChessBoard board;
     private Square fromSquare;
     private Square toSquare;
-    private final static int Tile_Size = 100;
+    private final static int Square_Size = 100;
    // private String fileDestantion;
    private int fileNum,fileFix,rankNum,rankFix;
    int color =1;//statrt
@@ -65,14 +65,14 @@ public class ChessGUI extends JFrame {
         // "C:\\Users\\reda\\Desktop\\Programming\\Chess-Project\\ChessJavaLib\\";
         this.frame = new JFrame("Chess");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(8 * Tile_Size, 8 * Tile_Size);
+        this.frame.setSize(8 * Square_Size, 8 * Square_Size);
         this.frame.setLayout(new GridLayout(8, 8));
         this.setTiles();// sets tiles board and with its pieces
         frame.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                int x = e.getX() / Tile_Size;
-                int y = e.getY() / Tile_Size;
+                int x = e.getX() / Square_Size;
+                int y = e.getY() / Square_Size;
                 // x and y are click posiiotn
                 
             
@@ -237,11 +237,10 @@ public class ChessGUI extends JFrame {
         Square square = new Square(file, rank);
         if (game.getBoard().getPieceAtSquare(square) != null) {// if not empty
             try {// add an image.. piece in gui
-                BufferedImage image = ImageIO
-                        .read(new File(game.getPieceName(square) + ".png"));// depending on the peice
+                BufferedImage image = ImageIO.read(new File(game.getPieceName(square) + ".png"));// depending on the peice
                 if (image != null) {
-                    Image scaledImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                    JLabel piece = new JLabel(new ImageIcon(scaledImage));
+                    Image scaledImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);//to fit the panel
+                    JLabel piece = new JLabel(new ImageIcon(scaledImage));//add el piece img
                     panel.add(piece);
                 } else {
                     System.out.println("Image is not found");// msh haye7sal isA
