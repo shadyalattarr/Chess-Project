@@ -36,11 +36,14 @@ public abstract class ChessGame {
         return canBlackCastleQueenSide;
     }
 
-    public boolean isPawnPromotion(Square square) {
-        if (board.getPieceAtSquare(square) instanceof Pawn) {
-            BoardRank toSquareRank = square.getRank();
-            if ((toSquareRank == BoardRank.SECOND && board.getPieceAtSquare(square).getOwner() == Player.BLACK)
-                    || (toSquareRank == BoardRank.SEVENTH && board.getPieceAtSquare(square).getOwner() == Player.WHITE))
+    public boolean isPawnPromotion(Move move) {
+        if (board.getPieceAtSquare(move.getFromSquare()) instanceof Pawn) {
+            BoardRank fromSquareRank = move.getFromSquare().getRank();
+            BoardRank toSquareRank = move.getToSquare().getRank();
+            if ((fromSquareRank == BoardRank.SECOND && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.BLACK
+                    && toSquareRank == BoardRank.FIRST )
+                    || (fromSquareRank == BoardRank.SEVENTH && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.WHITE
+                        && toSquareRank == BoardRank.EIGHTH))
                 return true;
         }
         return false;
@@ -61,7 +64,6 @@ public abstract class ChessGame {
         if (pieceAtTo != null && pieceAtTo.getOwner() == whoseTurn) {
             return false;
         }
-
         return isValidMoveCore(move);
     }
 

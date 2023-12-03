@@ -24,9 +24,17 @@ public class ChessGUI extends JFrame {
     private final static int Tile_Size = 100;
    // private String fileDestantion;
    private int fileNum,fileFix,rankNum,rankFix;
-
-   public void updateThem()
-   {
+   int color =1;//statrt
+   
+    public void updateColor()
+    {
+        if(this.color == 0)
+            this.color = 1;
+        else
+            this.color = 0;
+    }
+    public void updateThem()
+    {
         if(game.getWhoseTurn() == Player.BLACK)
         {
             fileNum = 7;fileFix=1;rankNum = 0;rankFix = -1;
@@ -66,14 +74,17 @@ public class ChessGUI extends JFrame {
                 int x = e.getX() / Tile_Size;
                 int y = e.getY() / Tile_Size;
                 // x and y are click posiiotn
+                
+            
                 if (fromSquare == null) {// if this first click
 
                     fromSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change // 7- swapped
                     List<Square> moves = game.getAllValidMovesFromSquare(fromSquare);
                     if (moves.size() == 0) {// no mves available
                         fromSquare = null;
-                        JOptionPane.showMessageDialog(null, "No valid moves for this piece");// ith we need to remove
-                                                                                             // this?
+                        if(!game.isGameEnded())
+                            JOptionPane.showMessageDialog(null, "No valid moves for this piece");// ith we need to remove
+                                                                                            // this?
                     } else {
                         highlightSquares(moves);
 
@@ -84,30 +95,48 @@ public class ChessGUI extends JFrame {
                     toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
 
                     Move move = new Move(fromSquare, toSquare);
-                    if (game.isPawnPromotion(fromSquare))
-                        move = promtiMove(fromSquare, toSquare);
+                    if (game.isPawnPromotion(move))
+                        {
+                            move = new Move(fromSquare,toSquare,PawnPromotion.Queen);//as a test
+                            if(game.isValidMove(move))
+                                move = promtiMove(fromSquare, toSquare);
+                        }
                     if (game.isValidMove(move)) {
                         // if(game.hasPieceIn(toSquare))
                         // JOptionPane.showMessageDialog(null, game.getPieceName(toSquare) + " IS
                         // CAPTURED");
 
                         game.makeMove(move);// made move in board
-
+                        fromSquare = null;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Invalid move");
-
+                            List<Square> moves = game.getAllValidMovesFromSquare(toSquare);
+                            if (moves.size() == 0) {// no mves available
+                                {
+                                    fromSquare = null;
+                                    JOptionPane.showMessageDialog(null, "Invalid move");
+                                }
+                            } else {
+                                
+                                
+                                fromSquare = toSquare;
+                            }
+                                                        
+                            
                     }
                     frame.getContentPane().removeAll();// fadi el frame
                     setTiles();// resetting it
                     frame.revalidate();
                     frame.repaint();
                     highlightKingSquareIfInDanger();
-                    fromSquare = null;
+                    List<Square> moves = game.getAllValidMovesFromSquare(toSquare);
+                    if(!game.isValidMove(move) && moves.size() != 0)
+                        {highlightSquares(moves);}
                     toSquare = null;
                 }
+                   
                 if (game.isGameEnded()) {
-                    getEnding();
-                }
+                    getEnding();}
+                
             }
 
             @Override
@@ -187,20 +216,21 @@ public class ChessGUI extends JFrame {
     {
         JPanel panel = new JPanel(new BorderLayout(1, 1));
         frame.add(panel);
-        //change the method
-        int row = (i / 8) % 2;
-        if (row == 0) {
-            if (i % 2 == 0) {
-                panel.setBackground(new Color(255, 253, 228));
-            } else {
-                panel.setBackground(new Color(111, 78, 55));
-            }
-        } else {
-            if (i % 2 == 0) {
-                panel.setBackground(new Color(111, 78, 55));
-            } else {
-                panel.setBackground(new Color(255, 253, 228));
-            }
+        // change the method
+        // if(i+1%8 !=0)
+        // code= change color
+
+        Color Color1 = new Color(255, 253, 228);//light
+        Color Color0 = new Color(111, 78, 55);
+        
+        if(this.color == 1)
+            panel.setBackground(Color1);
+        else
+            panel.setBackground(Color0);
+
+        if(((i) % 8 != 7 && game.getWhoseTurn() == Player.WHITE) || (i%8!=0 && game.getWhoseTurn() == Player.BLACK))
+        {//change
+            updateColor(); 
         }
         BoardFile file = BoardFile.values()[i % 8];// cols
         BoardRank rank = BoardRank.values()[7 - i / 8];// rows
@@ -210,7 +240,7 @@ public class ChessGUI extends JFrame {
                 BufferedImage image = ImageIO
                         .read(new File(game.getPieceName(square) + ".png"));// depending on the peice
                 if (image != null) {
-                    Image scaledImage = image.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+                    Image scaledImage = image.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
                     JLabel piece = new JLabel(new ImageIcon(scaledImage));
                     panel.add(piece);
                 } else {
