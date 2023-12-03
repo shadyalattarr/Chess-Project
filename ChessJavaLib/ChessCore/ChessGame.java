@@ -36,6 +36,16 @@ public abstract class ChessGame {
         return canBlackCastleQueenSide;
     }
 
+    public boolean isPawnPromotion(Square square) {
+        if (board.getPieceAtSquare(square) instanceof Pawn) {
+            BoardRank toSquareRank = square.getRank();
+            if ((toSquareRank == BoardRank.SECOND && board.getPieceAtSquare(square).getOwner() == Player.BLACK)
+                    || (toSquareRank == BoardRank.SEVENTH && board.getPieceAtSquare(square).getOwner() == Player.WHITE))
+                return true;
+        }
+        return false;
+    }
+
     public boolean isValidMove(Move move) {
         if (isGameEnded()) {
             return false;
