@@ -81,7 +81,7 @@ public final class Utilities {
         return null;
     }
 
-    private static  Square getKingSquare(Player whoseTurn, ChessBoard board) {
+    public static  Square getKingSquare(Player whoseTurn, ChessBoard board) {
         BoardFile[] files = BoardFile.values();
         BoardRank[] ranks = BoardRank.values();
         for (BoardFile file : files) {

@@ -23,8 +23,32 @@ public class ChessGUI extends JFrame {
     private Square toSquare;
     private final static int Tile_Size = 100;
    // private String fileDestantion;
+   private int fileNum,fileFix,rankNum,rankFix;
 
+   public void updateThem()
+   {
+        if(game.getWhoseTurn() == Player.BLACK)
+        {
+            fileNum = 7;fileFix=1;rankNum = 0;rankFix = -1;
+        }
+        else
+        {
+            fileNum = 0;fileFix=-1;rankNum = 7;rankFix = 1;
+        }
+   }
+   public void highlightKingSquareIfInDanger()
+   {
+        if(Utilities.isInCheck(game.getWhoseTurn(), game.getBoard()))//if my king in check
+        {
+            //highlight my square
+            Square checkdedKingSq = Utilities.getKingSquare(game.getWhoseTurn(), game.getBoard());
+            int index = 8 * (rankNum-rankFix*checkdedKingSq.getRank().getValue()) + (fileNum-checkdedKingSq.getFile().getValue()*fileFix);// ith this need change?
+            JPanel panel = (JPanel) frame.getContentPane().getComponent(index);
+            panel.setBackground(new Color(255, 255, 134));
+        }
+   }
     public ChessGUI() {
+
         this.game = new ClassicChessGame();
         // this.board = game.getBoard();
         this.fromSquare = null;
@@ -44,7 +68,7 @@ public class ChessGUI extends JFrame {
                 // x and y are click posiiotn
                 if (fromSquare == null) {// if this first click
 
-                    fromSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);// need change
+                    fromSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change // 7- swapped
                     List<Square> moves = game.getAllValidMovesFromSquare(fromSquare);
                     if (moves.size() == 0) {// no mves available
                         fromSquare = null;
@@ -57,7 +81,7 @@ public class ChessGUI extends JFrame {
 
                 } else {// fromsquare decided and to square required
                     // this click now is the to square
-                    toSquare = new Square(BoardFile.values()[x], BoardRank.values()[7 - y]);// need change
+                    toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
 
                     Move move = new Move(fromSquare, toSquare);
                     if (game.isPawnPromotion(fromSquare))
@@ -77,6 +101,7 @@ public class ChessGUI extends JFrame {
                     setTiles();// resetting it
                     frame.revalidate();
                     frame.repaint();
+                    highlightKingSquareIfInDanger();
                     fromSquare = null;
                     toSquare = null;
                 }
@@ -153,49 +178,64 @@ public class ChessGUI extends JFrame {
 
     private void highlightSquares(List<Square> squares) {
         for (Square square : squares) {
-            int index = 8 * (7 - square.getRank().getValue()) + square.getFile().getValue();// ith this need change?
+            int index = 8 * (rankNum-rankFix*square.getRank().getValue()) + (fileNum-square.getFile().getValue()*fileFix);// ith this need change?
             JPanel panel = (JPanel) frame.getContentPane().getComponent(index);
             panel.setBackground(new Color(162, 255, 134));
         }
     }
+    public void setI(int i)
+    {
+        JPanel panel = new JPanel(new BorderLayout(1, 1));
+        frame.add(panel);
+        //change the method
+        int row = (i / 8) % 2;
+        if (row == 0) {
+            if (i % 2 == 0) {
+                panel.setBackground(new Color(255, 253, 228));
+            } else {
+                panel.setBackground(new Color(111, 78, 55));
+            }
+        } else {
+            if (i % 2 == 0) {
+                panel.setBackground(new Color(111, 78, 55));
+            } else {
+                panel.setBackground(new Color(255, 253, 228));
+            }
+        }
+        BoardFile file = BoardFile.values()[i % 8];// cols
+        BoardRank rank = BoardRank.values()[7 - i / 8];// rows
+        Square square = new Square(file, rank);
+        if (game.getBoard().getPieceAtSquare(square) != null) {// if not empty
+            try {// add an image.. piece in gui
+                BufferedImage image = ImageIO
+                        .read(new File(game.getPieceName(square) + ".png"));// depending on the peice
+                if (image != null) {
+                    Image scaledImage = image.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+                    JLabel piece = new JLabel(new ImageIcon(scaledImage));
+                    panel.add(piece);
+                } else {
+                    System.out.println("Image is not found");// msh haye7sal isA
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error loading image: " + e.getMessage());// same
+            }
+        }
+    }
 
     private void setTiles() {
-        for (int i = 0; i < 64; i++) {
-            JPanel panel = new JPanel(new BorderLayout(1, 1));
-            frame.add(panel);
-            //change the method
-            int row = (i / 8) % 2;
-            if (row == 0) {
-                if (i % 2 == 0) {
-                    panel.setBackground(new Color(255, 253, 228));
-                } else {
-                    panel.setBackground(new Color(111, 78, 55));
-                }
-            } else {
-                if (i % 2 == 0) {
-                    panel.setBackground(new Color(111, 78, 55));
-                } else {
-                    panel.setBackground(new Color(255, 253, 228));
-                }
+        updateThem();
+        if(game.getWhoseTurn() == Player.BLACK)
+        {
+            for (int i = 63; i >=0 ; i--) {////changed
+                setI(i);
             }
-            BoardFile file = BoardFile.values()[i % 8];// cols
-            BoardRank rank = BoardRank.values()[7 - i / 8];// rows
-            Square square = new Square(file, rank);
-            if (game.getBoard().getPieceAtSquare(square) != null) {// if not empty
-                try {// add an image.. piece in gui
-                    BufferedImage image = ImageIO
-                            .read(new File(game.getPieceName(square) + ".png"));// depending on the peice
-                    if (image != null) {
-                        Image scaledImage = image.getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-                        JLabel piece = new JLabel(new ImageIcon(scaledImage));
-                        panel.add(piece);
-                    } else {
-                        System.out.println("Image is not found");// msh haye7sal isA
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    System.out.println("Error loading image: " + e.getMessage());// same
-                }
+        }
+        else
+        {
+            for(int i =0;i<64;i++)
+            {
+                setI(i);
             }
         }
 
