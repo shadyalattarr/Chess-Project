@@ -5,7 +5,8 @@ import ChessCore.Pieces.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ChessGame {
+
+public abstract class ChessGame {//originator -- will make a nested memento immutable class here
     private final ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
     private Player whoseTurn = Player.WHITE;
@@ -15,7 +16,39 @@ public abstract class ChessGame {
     private boolean canWhiteCastleQueenSide = true;
     private boolean canBlackCastleKingSide = true;
     private boolean canBlackCastleQueenSide = true;
+    //originator
 
+    public class Memento {//memento inner class// state of game
+        ChessGame game;
+        private final Move lastMove;//private and final lazem
+        private final boolean canWhiteCastleKingSide;
+        private final boolean canWhiteCastleQueenSide;
+        private final boolean canBlackCastleKingSide;
+        private final boolean canBlackCastleQueenSide;
+        private final ChessBoard board; 
+        private final GameStatus gameStatus;
+        private final Player whoseTurn;
+        //private constructor so not anyone can make a n obj
+        private Memento(ChessGame game, ChessBoard board, Move lastMove , boolean canWhiteCastleKingSide,boolean canWhiteCastleQueenSide 
+            , boolean canBlackCastleKingSide,boolean canBlackCastleQueenSide,GameStatus gameStatus,Player whoseTurn)
+            {
+                this.game = game;
+                this.board = board;
+                this.canBlackCastleKingSide = canBlackCastleKingSide;
+                this.canBlackCastleQueenSide = canBlackCastleQueenSide;
+                this.lastMove = lastMove;
+                this.canWhiteCastleKingSide = canWhiteCastleKingSide;
+                this.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
+                this.gameStatus = gameStatus;
+                this.whoseTurn = whoseTurn;
+            }
+
+        public void restore()//restore game with the calling memento
+        {
+            game.undoMove(lastMove);
+
+        }
+    }
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());
     }
@@ -119,7 +152,11 @@ public abstract class ChessGame {
         }
         return pieceName;
     }
-
+    private void undoMove(Move lastMove)//added this
+    {
+        board.setPieceAtSquare(lastMove.getFromSquare(), board.getPieceAtSquare(lastMove.getToSquare()));
+        board.setPieceAtSquare(lastMove.getToSquare(), lastMove.getCapturedPiece());
+    }
     public boolean makeMove(Move move) {
         if (!isValidMove(move)) {
             return false;
@@ -348,7 +385,7 @@ public abstract class ChessGame {
         for (var i : BoardFile.values()) {
             for (var j : BoardRank.values()) {
                 var sq = new Square(i, j);
-                if (isValidMove(new Move(square, sq, PawnPromotion.Queen))) {
+                if (isValidMove(new Move(square, sq, PawnPromotion.Queen,board.getPieceAtSquare(sq)))) {
                     validMoves.add(sq);
                 }
             }

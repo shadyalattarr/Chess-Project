@@ -1,12 +1,19 @@
 package ChessCore;
 
-import ChessCore.Pieces.Piece;
+import java.util.Stack;
 
+import ChessCore.Pieces.Piece;
+import ChessCore.ChessGame.Memento;;
 public final class ChessBoard {
     private final Piece[][] board;
+    Stack<Memento> movesHistory = new Stack<Memento>();
 
     public ChessBoard(Piece[][] board) {
         this.board = board;
+    }
+    public void undo()//pop restore
+    {
+
     }
 
     // This is a copy constructor, used for cloning the ChessBoard.

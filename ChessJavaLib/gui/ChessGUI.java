@@ -96,10 +96,10 @@ public class ChessGUI extends JFrame {
                     // this click now is the to square
                     toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
 
-                    Move move = new Move(fromSquare, toSquare);
+                    Move move = new Move(fromSquare, toSquare,game.getBoard().getPieceAtSquare(toSquare));
                     if (game.isPawnPromotion(move))
                         {
-                            move = new Move(fromSquare,toSquare,PawnPromotion.Queen);//as a test
+                            move = new Move(fromSquare,toSquare,PawnPromotion.Queen,game.getBoard().getPieceAtSquare(toSquare));//as a test
                             if(game.isValidMove(move))
                                 move = promtiMove(fromSquare, toSquare);
                         }
@@ -183,15 +183,15 @@ public class ChessGUI extends JFrame {
                 options,
                 null);
         if (choice == 0)
-            return new Move(fSquare, tSquare, PawnPromotion.Queen);
+            return new Move(fSquare, tSquare, PawnPromotion.Queen,game.getBoard().getPieceAtSquare(tSquare));
         else if (choice == 1)
-            return new Move(fSquare, tSquare, PawnPromotion.Rook);
+            return new Move(fSquare, tSquare, PawnPromotion.Rook,game.getBoard().getPieceAtSquare(tSquare));
         else if (choice == 2)
-            return new Move(fSquare, tSquare, PawnPromotion.Bishop);
+            return new Move(fSquare, tSquare, PawnPromotion.Bishop,game.getBoard().getPieceAtSquare(tSquare));
         else if (choice == 3)
-            return new Move(fSquare, tSquare, PawnPromotion.Knight);
+            return new Move(fSquare, tSquare, PawnPromotion.Knight,game.getBoard().getPieceAtSquare(tSquare));
         else {
-           return new Move(fSquare, tSquare);
+           return new Move(fSquare, tSquare,game.getBoard().getPieceAtSquare(tSquare));
         }
     }
 

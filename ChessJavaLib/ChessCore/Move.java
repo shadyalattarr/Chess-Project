@@ -1,20 +1,27 @@
 package ChessCore;
 
+import ChessCore.Pieces.Piece;
+
 public final class Move {
     private final Square fromSquare;
     private final Square toSquare;
     private final PawnPromotion pawnPromotion;
+    private final Piece capturedPiece;//added this
 
-    public Move(Square fromSquare, Square toSquare) {
-        this(fromSquare, toSquare, PawnPromotion.None);
+    public Move(Square fromSquare, Square toSquare,Piece capturedPiece) {
+        this(fromSquare, toSquare, PawnPromotion.None,capturedPiece);
+        
     }
 
-    public Move(Square fromSquare, Square toSquare, PawnPromotion pawnPromotion) {
+    public Move(Square fromSquare, Square toSquare, PawnPromotion pawnPromotion, Piece capturedPiece) {
         this.fromSquare = fromSquare;
         this.toSquare = toSquare;
         this.pawnPromotion = pawnPromotion;
+        this.capturedPiece = capturedPiece;
     }
-
+    public Piece getCapturedPiece() {
+        return this.capturedPiece;
+    }
     public Square getFromSquare() {
         return fromSquare;
     }
