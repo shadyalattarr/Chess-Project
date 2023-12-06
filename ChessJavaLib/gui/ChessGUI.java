@@ -14,6 +14,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 public class ChessGUI extends JFrame {
     JFrame frame;
@@ -214,7 +216,9 @@ public class ChessGUI extends JFrame {
     }
     public void setI(int i)
     {
-        JPanel panel = new JPanel(new BorderLayout(1, 1));
+        JPanel panel = new JPanel(new BorderLayout());
+        Border border = BorderFactory.createEtchedBorder(new Color(0,0,0),new Color(0,0,0));
+        panel.setBorder(border);
         frame.add(panel);
         // change the method
         // if(i+1%8 !=0)
