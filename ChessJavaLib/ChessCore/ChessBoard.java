@@ -8,7 +8,7 @@ import ChessCore.ChessGame.Memento;
 
 public final class ChessBoard {
     private final Piece[][] board;
-    Stack<Memento> movesHistory = new Stack<Memento>();
+    static Stack<Memento> movesHistory = new Stack<Memento>();
 
     public ChessBoard(Piece[][] board) {
         this.board = board;

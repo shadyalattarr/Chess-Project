@@ -16,4 +16,8 @@ public final class Square {
     public BoardRank getRank() {
         return rank;
     }
+    public String toString()
+    {
+        return this.file.toString() + this.rank.toString();
+    }
 }

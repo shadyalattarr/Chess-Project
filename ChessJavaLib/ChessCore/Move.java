@@ -20,16 +20,15 @@ public final class Move {
         
         this.capturedPiece = capturedPiece;
     }
-    public Piece serCapturedPiece(Piece piece)
-    {
-        this.capturedPiece = piece;
-    }
+    
     public Piece getCapturedPiece() {
         return this.capturedPiece;
     }
     public Square getFromSquare() {
         return fromSquare;
     }
+
+    
 
     public Square getToSquare() {
         return toSquare;

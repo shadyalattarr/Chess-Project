@@ -20,7 +20,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
 
     public class Memento {//memento inner class// state of game
         ChessGame game;
-        private final Move lastMove;//private and final lazem
+        private final Move lastMove;//private and final lazem // last move is the move that led to this
         private final boolean canWhiteCastleKingSide;
         private final boolean canWhiteCastleQueenSide;
         private final boolean canBlackCastleKingSide;
@@ -46,18 +46,24 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         public void restore()//restore game with the calling memento
         {
             if(lastMove!= null)
-                game.undoMove(lastMove);//to update board
+                {
+                    game.lastMove = lastMove;//not sure i dont think this cirrect
+                    
+                    if(this.whoseTurn == Player.BLACK)
+                        game.whoseTurn = Player.WHITE;
+                    else
+                        game.whoseTurn = Player.BLACK;
+                
+                    game.undoMove(lastMove);//to update board
+
+                }
             game.canBlackCastleKingSide = canBlackCastleKingSide;
             game.canBlackCastleQueenSide = canBlackCastleQueenSide;
             game.canWhiteCastleKingSide = canWhiteCastleKingSide;
             game.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
             game.gameStatus = gameStatus;
-            if(this.whoseTurn == Player.BLACK)
-                game.whoseTurn = Player.WHITE;
-            else
-                game.whoseTurn = Player.BLACK;
+
             //board.movesHistory.peek().lastMove;
-            game.lastMove = lastMove;//not sure i dont think this cirrect
         }
     }
 
@@ -135,7 +141,6 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     public boolean isTherePieceInBetween(Move move) {
         return board.isTherePieceInBetween(move);
     }
-
     public boolean hasPieceIn(Square square) {
         return board.getPieceAtSquare(square) != null;
     }
@@ -172,9 +177,28 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     }
     private void undoMove(Move lastMove)//added this
     {
-        board.setPieceAtSquare(lastMove.getFromSquare(), board.getPieceAtSquare(lastMove.getToSquare()));
+        if(isPawnPromotion(this.lastMove))
+        {
+            System.out.println("pppppppppromotion");
+            board.setPieceAtSquare(lastMove.getFromSquare(), new Pawn(whoseTurn));                        
+        } else
+            board.setPieceAtSquare(lastMove.getFromSquare(), board.getPieceAtSquare(lastMove.getToSquare()));
+        
         board.setPieceAtSquare(lastMove.getToSquare(), lastMove.getCapturedPiece());
+        if(lastMove.getCapturedPiece() == null)
+        {
+            //if enpassant
+            if(this.getWhoseTurn() == Player.WHITE && lastMove.getToSquare().getRank() == BoardRank.SIXTH)
+            {
+                board.setPieceAtSquare(new Square(lastMove.getToSquare().getFile(), BoardRank.FIFTH), new Pawn(Player.BLACK));
+            }
+            else if(this.getWhoseTurn() == Player.BLACK && lastMove.getToSquare().getRank() == BoardRank.THIRD)
+            {
+                board.setPieceAtSquare(new Square(lastMove.getToSquare().getFile(), BoardRank.FORTH), new Pawn(Player.WHITE));
+            }
+        }
     }
+
     public boolean makeMove(Move move) {
         if (!isValidMove(move)) {
             return false;
@@ -211,7 +235,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
             }
         }
 
-        // En-passant.
+        // En-passant
         if (fromPiece instanceof Pawn &&
                 move.getAbsDeltaX() == 1 &&
                 !hasPieceIn(move.getToSquare())) {

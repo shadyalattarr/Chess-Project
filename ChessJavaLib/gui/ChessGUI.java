@@ -90,18 +90,7 @@ public class ChessGUI extends JFrame {
                 // TODO Auto-generated method stub
                 if(a.getSource() == undoButton)
                     {
-                        System.out.println("Button pressed!!!");
-                        System.out.println("whose turn before undo:");
-                        if(game.getWhoseTurn() == Player.BLACK)
-                            System.out.println("black");
-                        else
-                            System.out.println("white");
                         game.getBoard().undo();
-                        System.out.println("whose turn after undo:");
-                        if(game.getWhoseTurn() == Player.BLACK)
-                            System.out.println("black");
-                        else
-                            System.out.println("white");
                         updateThem();
                         
                         boardPanel.removeAll();// fadi el frame // delted getContentPane().
@@ -136,9 +125,13 @@ public class ChessGUI extends JFrame {
 
                 } else {// fromsquare decided and to square required
                     // this click now is the to square
+                    Move move;
                     toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
                     //need to check if enpassant el captured pieece gheir
-                    Move move = new Move(fromSquare, toSquare,game.getBoard().getPieceAtSquare(toSquare));
+
+                    move = new Move(fromSquare, toSquare,game.getBoard().getPieceAtSquare(toSquare));
+                    
+
                     if (game.isPawnPromotion(move))
                         {
                             move = new Move(fromSquare,toSquare,PawnPromotion.Queen,game.getBoard().getPieceAtSquare(toSquare));//as a test
