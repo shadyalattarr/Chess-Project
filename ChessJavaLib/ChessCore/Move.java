@@ -17,7 +17,12 @@ public final class Move {
         this.fromSquare = fromSquare;
         this.toSquare = toSquare;
         this.pawnPromotion = pawnPromotion;
+        
         this.capturedPiece = capturedPiece;
+    }
+    public Piece serCapturedPiece(Piece piece)
+    {
+        this.capturedPiece = piece;
     }
     public Piece getCapturedPiece() {
         return this.capturedPiece;

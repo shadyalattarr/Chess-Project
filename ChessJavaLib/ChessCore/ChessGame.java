@@ -45,18 +45,23 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
 
         public void restore()//restore game with the calling memento
         {
-            game.undoMove(lastMove);//to update board
+            if(lastMove!= null)
+                game.undoMove(lastMove);//to update board
             game.canBlackCastleKingSide = canBlackCastleKingSide;
             game.canBlackCastleQueenSide = canBlackCastleQueenSide;
             game.canWhiteCastleKingSide = canWhiteCastleKingSide;
             game.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
             game.gameStatus = gameStatus;
-            game.whoseTurn = whoseTurn;
+            if(this.whoseTurn == Player.BLACK)
+                game.whoseTurn = Player.WHITE;
+            else
+                game.whoseTurn = Player.BLACK;
+            //board.movesHistory.peek().lastMove;
             game.lastMove = lastMove;//not sure i dont think this cirrect
         }
     }
 
-    public void saveMove()
+    public void saveState()
     {
         board.movesHistory.push(
             new Memento(this, board, lastMove, canWhiteCastleKingSide, canWhiteCastleQueenSide, canBlackCastleKingSide, canBlackCastleQueenSide, gameStatus, whoseTurn)
@@ -211,6 +216,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
                 move.getAbsDeltaX() == 1 &&
                 !hasPieceIn(move.getToSquare())) {
             board.setPieceAtSquare(lastMove.getToSquare(), null);
+            
         }
 
         // Promotion

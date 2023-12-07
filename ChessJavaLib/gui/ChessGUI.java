@@ -4,6 +4,7 @@ import ChessCore.*;
 import ChessCore.Pieces.Piece;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,7 @@ import javax.swing.border.EtchedBorder;
 
 public class ChessGUI extends JFrame {
     JFrame frame;
+    JPanel boardPanel;
     private ClassicChessGame game;
     // private ChessBoard board;
     private Square fromSquare;
@@ -67,14 +69,54 @@ public class ChessGUI extends JFrame {
         // "C:\\Users\\reda\\Desktop\\Programming\\Chess-Project\\ChessJavaLib\\";
         this.frame = new JFrame("Chess");
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setSize(8 * Square_Size, 8 * Square_Size);
-        this.frame.setLayout(new GridLayout(8, 8));
+        
+        this.frame.setLayout(new BorderLayout());
+        boardPanel = new JPanel();
+        boardPanel.setLayout(new GridLayout(8, 8));
+        JButton undoButton = new JButton("Undo");
+        //undoButton.setSize(80, 50);
+        frame.add(boardPanel,BorderLayout.CENTER);
+        frame.add(undoButton,BorderLayout.SOUTH);
+        frame.setSize(8 * Square_Size, 8 * Square_Size + undoButton.getHeight());
+        this.boardPanel.setSize(new Dimension(8 * Square_Size, 8 * Square_Size));
+        game.saveState();//turn white // no move
+
         this.setTiles();// sets tiles board and with its pieces
-        frame.addMouseListener(new MouseListener() {
+
+        undoButton.addActionListener(new ActionListener() {
+         
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent a) {
+                // TODO Auto-generated method stub
+                if(a.getSource() == undoButton)
+                    {
+                        System.out.println("Button pressed!!!");
+                        System.out.println("whose turn before undo:");
+                        if(game.getWhoseTurn() == Player.BLACK)
+                            System.out.println("black");
+                        else
+                            System.out.println("white");
+                        game.getBoard().undo();
+                        System.out.println("whose turn after undo:");
+                        if(game.getWhoseTurn() == Player.BLACK)
+                            System.out.println("black");
+                        else
+                            System.out.println("white");
+                        updateThem();
+                        
+                        boardPanel.removeAll();// fadi el frame // delted getContentPane().
+                        setTiles();// resetting it
+                        boardPanel.revalidate();
+                        boardPanel.repaint();
+                    }
+            }
+
+        });
+        boardPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 int x = e.getX() / Square_Size;
-                int y = e.getY() / Square_Size;
+                int y = (e.getY()+undoButton.getHeight()) / (Square_Size);
                 // x and y are click posiiotn
                 
             
@@ -95,7 +137,7 @@ public class ChessGUI extends JFrame {
                 } else {// fromsquare decided and to square required
                     // this click now is the to square
                     toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
-
+                    //need to check if enpassant el captured pieece gheir
                     Move move = new Move(fromSquare, toSquare,game.getBoard().getPieceAtSquare(toSquare));
                     if (game.isPawnPromotion(move))
                         {
@@ -107,8 +149,10 @@ public class ChessGUI extends JFrame {
                         // if(game.hasPieceIn(toSquare))
                         // JOptionPane.showMessageDialog(null, game.getPieceName(toSquare) + " IS
                         // CAPTURED");
-
+                        
                         game.makeMove(move);// made move in board
+                        //turn is black now and move is the whites move
+                        game.saveState();
                         fromSquare = null;
                     } else {
                             List<Square> moves = game.getAllValidMovesFromSquare(toSquare);
@@ -125,10 +169,10 @@ public class ChessGUI extends JFrame {
                                                         
                             
                     }
-                    frame.getContentPane().removeAll();// fadi el frame
+                    boardPanel.removeAll();// fadi el frame // delted getContentPane().
                     setTiles();// resetting it
-                    frame.revalidate();
-                    frame.repaint();
+                    boardPanel.revalidate();
+                    boardPanel.repaint();
                     highlightKingSquareIfInDanger();
                     List<Square> moves = game.getAllValidMovesFromSquare(toSquare);
                     if(!game.isValidMove(move) && moves.size() != 0)
@@ -210,8 +254,8 @@ public class ChessGUI extends JFrame {
     private void highlightSquares(List<Square> squares) {
         for (Square square : squares) {
             int index = 8 * (rankNum-rankFix*square.getRank().getValue()) + (fileNum-square.getFile().getValue()*fileFix);// ith this need change?
-            JPanel panel = (JPanel) frame.getContentPane().getComponent(index);
-            panel.setBackground(new Color(162, 255, 134));
+            JPanel panel = (JPanel) boardPanel.getComponent(index); // deleted (JPanel) frame.getContentPane()
+            panel.setBackground(new Color(162, 255, 134));//ask gumbile why it ust be type casted
         }
     }
     public void setI(int i)
@@ -219,7 +263,7 @@ public class ChessGUI extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         Border border = BorderFactory.createEtchedBorder(new Color(0,0,0),new Color(0,0,0));
         panel.setBorder(border);
-        frame.add(panel);
+        boardPanel.add(panel);
         // change the method
         // if(i+1%8 !=0)
         // code= change color
