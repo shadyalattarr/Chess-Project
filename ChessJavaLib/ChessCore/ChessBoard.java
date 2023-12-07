@@ -3,7 +3,9 @@ package ChessCore;
 import java.util.Stack;
 
 import ChessCore.Pieces.Piece;
-import ChessCore.ChessGame.Memento;;
+import ChessCore.ChessGame.Memento;
+
+
 public final class ChessBoard {
     private final Piece[][] board;
     Stack<Memento> movesHistory = new Stack<Memento>();
@@ -11,9 +13,16 @@ public final class ChessBoard {
     public ChessBoard(Piece[][] board) {
         this.board = board;
     }
-    public void undo()//pop restore
+    public boolean undo()//pop restore
     {
+        if(!movesHistory.empty())
+        {
+            movesHistory.pop().restore();
 
+            return true;
+        }
+
+        return false;
     }
 
     // This is a copy constructor, used for cloning the ChessBoard.

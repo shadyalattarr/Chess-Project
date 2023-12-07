@@ -29,7 +29,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         private final GameStatus gameStatus;
         private final Player whoseTurn;
         //private constructor so not anyone can make a n obj
-        private Memento(ChessGame game, ChessBoard board, Move lastMove , boolean canWhiteCastleKingSide,boolean canWhiteCastleQueenSide 
+        private  Memento(ChessGame game, ChessBoard board, Move lastMove , boolean canWhiteCastleKingSide,boolean canWhiteCastleQueenSide 
             , boolean canBlackCastleKingSide,boolean canBlackCastleQueenSide,GameStatus gameStatus,Player whoseTurn)
             {
                 this.game = game;
@@ -45,9 +45,22 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
 
         public void restore()//restore game with the calling memento
         {
-            game.undoMove(lastMove);
-
+            game.undoMove(lastMove);//to update board
+            game.canBlackCastleKingSide = canBlackCastleKingSide;
+            game.canBlackCastleQueenSide = canBlackCastleQueenSide;
+            game.canWhiteCastleKingSide = canWhiteCastleKingSide;
+            game.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
+            game.gameStatus = gameStatus;
+            game.whoseTurn = whoseTurn;
+            game.lastMove = lastMove;//not sure i dont think this cirrect
         }
+    }
+
+    public void saveMove()
+    {
+        board.movesHistory.push(
+            new Memento(this, board, lastMove, canWhiteCastleKingSide, canWhiteCastleQueenSide, canBlackCastleKingSide, canBlackCastleQueenSide, gameStatus, whoseTurn)
+        );
     }
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());
