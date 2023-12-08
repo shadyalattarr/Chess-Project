@@ -16,7 +16,7 @@ public final class Knight extends Piece {
 
     @Override
     public boolean isAttackingSquare(Square pieceSquare, Square squareUnderAttack, ChessBoard board) {
-        Move move = new Move(pieceSquare, squareUnderAttack, board.getPieceAtSquare(squareUnderAttack));
+        Move move = new Move(pieceSquare, squareUnderAttack);
         int deltaX = move.getAbsDeltaX();
         int deltaY = move.getAbsDeltaY();
         return (deltaX == 1 && deltaY == 2) || (deltaX == 2 && deltaY == 1);

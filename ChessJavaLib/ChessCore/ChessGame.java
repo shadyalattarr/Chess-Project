@@ -4,74 +4,82 @@ import ChessCore.Pieces.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 
 public abstract class ChessGame {//originator -- will make a nested memento immutable class here
-    private final ChessBoard board;
+    private ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
     private Player whoseTurn = Player.WHITE;
-
+    static Stack<Memento> movesHistory = new Stack<Memento>();
     private Move lastMove;
     private boolean canWhiteCastleKingSide = true;
     private boolean canWhiteCastleQueenSide = true;
     private boolean canBlackCastleKingSide = true;
     private boolean canBlackCastleQueenSide = true;
     //originator
-
+    
     public class Memento {//memento inner class// state of game
         ChessGame game;
-        private final Move lastMove;//private and final lazem // last move is the move that led to this
-        private final boolean canWhiteCastleKingSide;
-        private final boolean canWhiteCastleQueenSide;
-        private final boolean canBlackCastleKingSide;
-        private final boolean canBlackCastleQueenSide;
-        private final ChessBoard board; 
-        private final GameStatus gameStatus;
-        private final Player whoseTurn;
+        ChessBoard board;
+        private Move lastMove;
+        private boolean canWhiteCastleKingSide;
+        private boolean canWhiteCastleQueenSide;
+        private boolean canBlackCastleKingSide;
+        private boolean canBlackCastleQueenSide;
+        
+        private GameStatus gameStatus;
+        private Player whoseTurn;
         //private constructor so not anyone can make a n obj
-        private  Memento(ChessGame game, ChessBoard board, Move lastMove , boolean canWhiteCastleKingSide,boolean canWhiteCastleQueenSide 
-            , boolean canBlackCastleKingSide,boolean canBlackCastleQueenSide,GameStatus gameStatus,Player whoseTurn)
+        private  Memento(ChessGame game,ChessBoard board) 
             {
                 this.game = game;
-                this.board = board;
-                this.canBlackCastleKingSide = canBlackCastleKingSide;
-                this.canBlackCastleQueenSide = canBlackCastleQueenSide;
-                this.lastMove = lastMove;
-                this.canWhiteCastleKingSide = canWhiteCastleKingSide;
-                this.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
-                this.gameStatus = gameStatus;
-                this.whoseTurn = whoseTurn;
+                this.board = new ChessBoard(board);
+                this.lastMove = game.getLastMove();
+                this.canBlackCastleKingSide = game.canBlackCastleKingSide;
+                this.canBlackCastleQueenSide = game.canBlackCastleQueenSide;
+                this.canWhiteCastleKingSide = game.canWhiteCastleKingSide;
+                this.canWhiteCastleQueenSide = game.canWhiteCastleQueenSide;
+                this.gameStatus = getGameStatus();
+                this.whoseTurn = getWhoseTurn();
+                
             }
 
-        public void restore()//restore game with the calling memento
-        {
-            if(lastMove!= null)
-                {
-                    game.lastMove = lastMove;//not sure i dont think this cirrect
-                    
-                    if(this.whoseTurn == Player.BLACK)
-                        game.whoseTurn = Player.WHITE;
-                    else
-                        game.whoseTurn = Player.BLACK;
-                
-                    game.undoMove(lastMove);//to update board
-
-                }
-            game.canBlackCastleKingSide = canBlackCastleKingSide;
-            game.canBlackCastleQueenSide = canBlackCastleQueenSide;
-            game.canWhiteCastleKingSide = canWhiteCastleKingSide;
-            game.canWhiteCastleQueenSide = canWhiteCastleQueenSide;
-            game.gameStatus = gameStatus;
-
-            //board.movesHistory.peek().lastMove;
-        }
+        
     }
 
+    public void restore(Memento m)//restore game with the calling memento
+        {
+            this.board = m.board;
+            this.canBlackCastleKingSide = m.canBlackCastleKingSide;
+            this.canBlackCastleQueenSide = m.canBlackCastleQueenSide;
+            this.canWhiteCastleKingSide = m.canWhiteCastleKingSide;
+            this.canWhiteCastleQueenSide = m.canWhiteCastleQueenSide;
+            this.lastMove = m.lastMove;
+            this.whoseTurn = m.whoseTurn;
+            this.gameStatus = m.gameStatus;
+            //board.movesHistory.peek().lastMove;
+        }
     public void saveState()
     {
-        board.movesHistory.push(
-            new Memento(this, board, lastMove, canWhiteCastleKingSide, canWhiteCastleQueenSide, canBlackCastleKingSide, canBlackCastleQueenSide, gameStatus, whoseTurn)
+        movesHistory.push(
+            new Memento(this,board)
         );
+    }
+    public boolean undo()//pop restore
+    {
+        if(!movesHistory.empty())
+        {
+            System.out.println("Prev Size: "+ movesHistory.size());
+            System.out.println("We gonna restore");
+            restore(movesHistory.pop());
+            System.out.println("restor complete");
+            System.out.println("After Size: "+ movesHistory.size());
+
+            return true;
+        }
+
+        return false;
     }
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());
@@ -175,30 +183,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         }
         return pieceName;
     }
-    private void undoMove(Move lastMove)//added this
-    {
-        if(isPawnPromotion(this.lastMove))
-        {
-            System.out.println("pppppppppromotion");
-            board.setPieceAtSquare(lastMove.getFromSquare(), new Pawn(whoseTurn));                        
-        } else
-            board.setPieceAtSquare(lastMove.getFromSquare(), board.getPieceAtSquare(lastMove.getToSquare()));
-        
-        board.setPieceAtSquare(lastMove.getToSquare(), lastMove.getCapturedPiece());
-        if(lastMove.getCapturedPiece() == null)
-        {
-            //if enpassant
-            if(this.getWhoseTurn() == Player.WHITE && lastMove.getToSquare().getRank() == BoardRank.SIXTH)
-            {
-                board.setPieceAtSquare(new Square(lastMove.getToSquare().getFile(), BoardRank.FIFTH), new Pawn(Player.BLACK));
-            }
-            else if(this.getWhoseTurn() == Player.BLACK && lastMove.getToSquare().getRank() == BoardRank.THIRD)
-            {
-                board.setPieceAtSquare(new Square(lastMove.getToSquare().getFile(), BoardRank.FORTH), new Pawn(Player.WHITE));
-            }
-        }
-    }
-
+    
     public boolean makeMove(Move move) {
         if (!isValidMove(move)) {
             return false;
@@ -428,7 +413,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         for (var i : BoardFile.values()) {
             for (var j : BoardRank.values()) {
                 var sq = new Square(i, j);
-                if (isValidMove(new Move(square, sq, PawnPromotion.Queen,board.getPieceAtSquare(sq)))) {
+                if (isValidMove(new Move(square, sq, PawnPromotion.Queen))) {
                     validMoves.add(sq);
                 }
             }

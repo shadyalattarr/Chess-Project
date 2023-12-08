@@ -8,23 +8,11 @@ import ChessCore.ChessGame.Memento;
 
 public final class ChessBoard {
     private final Piece[][] board;
-    static Stack<Memento> movesHistory = new Stack<Memento>();
 
     public ChessBoard(Piece[][] board) {
         this.board = board;
     }
-    public boolean undo()//pop restore
-    {
-        if(!movesHistory.empty())
-        {
-            movesHistory.pop().restore();
-
-            return true;
-        }
-
-        return false;
-    }
-
+    
     // This is a copy constructor, used for cloning the ChessBoard.
     public ChessBoard(ChessBoard board) {
         this.board = new Piece[8][8];

@@ -22,6 +22,10 @@ public final class King extends Piece {
                 if (game.isTherePieceInBetween(move)) {
                     return false;
                 }
+                // if(Utilities.isInCheck(game.getWhoseTurn(), game.getBoard()))
+                // {
+                //     return false;
+                // }
                 // King-side
                 if (getOwner() == Player.WHITE && game.isCanWhiteCastleKingSide()) {
                     // King is moving from E1 to G1.
@@ -62,7 +66,7 @@ public final class King extends Piece {
 
     @Override
     public boolean isAttackingSquare(Square pieceSquare, Square squareUnderAttack, ChessBoard board) {
-        Move move = new Move(pieceSquare, squareUnderAttack, board.getPieceAtSquare(squareUnderAttack));
+        Move move = new Move(pieceSquare, squareUnderAttack);
         var deltaX = move.getAbsDeltaX();
         var deltaY = move.getAbsDeltaY();
         return deltaX <= 1 && deltaY <= 1;

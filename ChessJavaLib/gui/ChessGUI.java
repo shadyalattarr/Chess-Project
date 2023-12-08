@@ -79,7 +79,6 @@ public class ChessGUI extends JFrame {
         frame.add(undoButton,BorderLayout.SOUTH);
         frame.setSize(8 * Square_Size, 8 * Square_Size + undoButton.getHeight());
         this.boardPanel.setSize(new Dimension(8 * Square_Size, 8 * Square_Size));
-        game.saveState();//turn white // no move
 
         this.setTiles();// sets tiles board and with its pieces
 
@@ -90,7 +89,8 @@ public class ChessGUI extends JFrame {
                 // TODO Auto-generated method stub
                 if(a.getSource() == undoButton)
                     {
-                        game.getBoard().undo();
+                        game.undo();
+                    
                         updateThem();
                         
                         boardPanel.removeAll();// fadi el frame // delted getContentPane().
@@ -105,7 +105,7 @@ public class ChessGUI extends JFrame {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 int x = e.getX() / Square_Size;
-                int y = (e.getY()+undoButton.getHeight()) / (Square_Size);
+                int y = (e.getY()+2*undoButton.getHeight()) / (Square_Size);
                 // x and y are click posiiotn
                 
             
@@ -129,12 +129,12 @@ public class ChessGUI extends JFrame {
                     toSquare = new Square(BoardFile.values()[fileNum-x*fileFix], BoardRank.values()[rankNum-y*rankFix]);// need change
                     //need to check if enpassant el captured pieece gheir
 
-                    move = new Move(fromSquare, toSquare,game.getBoard().getPieceAtSquare(toSquare));
+                    move = new Move(fromSquare, toSquare);
                     
 
                     if (game.isPawnPromotion(move))
                         {
-                            move = new Move(fromSquare,toSquare,PawnPromotion.Queen,game.getBoard().getPieceAtSquare(toSquare));//as a test
+                            move = new Move(fromSquare,toSquare,PawnPromotion.Queen);//as a test
                             if(game.isValidMove(move))
                                 move = promtiMove(fromSquare, toSquare);
                         }
@@ -142,10 +142,10 @@ public class ChessGUI extends JFrame {
                         // if(game.hasPieceIn(toSquare))
                         // JOptionPane.showMessageDialog(null, game.getPieceName(toSquare) + " IS
                         // CAPTURED");
+                        game.saveState();
                         
                         game.makeMove(move);// made move in board
                         //turn is black now and move is the whites move
-                        game.saveState();
                         fromSquare = null;
                     } else {
                             List<Square> moves = game.getAllValidMovesFromSquare(toSquare);
@@ -220,15 +220,15 @@ public class ChessGUI extends JFrame {
                 options,
                 null);
         if (choice == 0)
-            return new Move(fSquare, tSquare, PawnPromotion.Queen,game.getBoard().getPieceAtSquare(tSquare));
+            return new Move(fSquare, tSquare, PawnPromotion.Queen);
         else if (choice == 1)
-            return new Move(fSquare, tSquare, PawnPromotion.Rook,game.getBoard().getPieceAtSquare(tSquare));
+            return new Move(fSquare, tSquare, PawnPromotion.Rook);
         else if (choice == 2)
-            return new Move(fSquare, tSquare, PawnPromotion.Bishop,game.getBoard().getPieceAtSquare(tSquare));
+            return new Move(fSquare, tSquare, PawnPromotion.Bishop);
         else if (choice == 3)
-            return new Move(fSquare, tSquare, PawnPromotion.Knight,game.getBoard().getPieceAtSquare(tSquare));
+            return new Move(fSquare, tSquare, PawnPromotion.Knight);
         else {
-           return new Move(fSquare, tSquare,game.getBoard().getPieceAtSquare(tSquare));
+           return new Move(fSquare, tSquare);
         }
     }
 

@@ -70,7 +70,7 @@ public final class Pawn extends Piece {
 
     @Override
     public boolean isAttackingSquare(Square pieceSquare, Square squareUnderAttack, ChessBoard board) {
-        Move move = new Move(pieceSquare, squareUnderAttack,board.getPieceAtSquare(squareUnderAttack));
+        Move move = new Move(pieceSquare, squareUnderAttack);
         int attackingDeltaY = getOwner() == Player.WHITE ? 1 : -1;
         return move.getDeltaY() == attackingDeltaY && move.getAbsDeltaX() == 1;
     }

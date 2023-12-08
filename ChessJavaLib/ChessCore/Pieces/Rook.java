@@ -14,7 +14,7 @@ public final class Rook extends Piece {
 
     @Override
     public boolean isAttackingSquare(Square pieceSquare, Square squareUnderAttack, ChessBoard board) {
-        Move move = new Move(pieceSquare, squareUnderAttack,board.getPieceAtSquare(squareUnderAttack));
+        Move move = new Move(pieceSquare, squareUnderAttack);
         return (move.isHorizontalMove() || move.isVerticalMove()) && !board.isTherePieceInBetween(move);
     }
 }
