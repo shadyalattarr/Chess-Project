@@ -9,7 +9,8 @@ import java.util.Stack;
 public abstract class ChessGame {// originator -- will make a nested memento immutable class here
     private ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
-    private GameStatePublisher publisher = new GameStatePublisher();
+   // private GameStatePublisher publisher = new GameStatePublisher();
+    private List<GameStateObserver> observers = new ArrayList<>();
     private Player whoseTurn = Player.WHITE;
     private Move lastMove;
     private boolean canWhiteCastleKingSide = true;
@@ -320,18 +321,21 @@ public abstract class ChessGame {// originator -- will make a nested memento imm
         if (isInsufficientMaterial()) {
             gameStatus = GameStatus.INSUFFICIENT_MATERIAL;
         }
-
-        publisher.setStatus(gameStatus);
+        notifyObservers();
+      
     }
-
-    public void addGameStateObserver(GameStateObserver observer) {
-        publisher.addObserver(observer);
+    public void addObserver(GameStateObserver observer) {
+        observers.add(observer);
     }
-
-    public void removeGameStateObserver(GameStateObserver observer) {
-        publisher.removeObserver(observer);
+    public void removeObserver(GameStateObserver observer) {
+        observers.remove(observer);
     }
-
+    public void notifyObservers() {
+        for (GameStateObserver observer : observers) {
+            observer.update(gameStatus);
+        }
+    }
+   
     public GameStatus getGameStatus() {
         return gameStatus;
     }

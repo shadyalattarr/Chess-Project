@@ -86,7 +86,7 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
         frame.add(undoButton, BorderLayout.SOUTH);
         frame.setSize(8 * Square_Size, 8 * Square_Size + undoButton.getHeight());
         this.boardPanel.setSize(new Dimension(8 * Square_Size, 8 * Square_Size));
-        game.addGameStateObserver(this);
+        game.addObserver(this);
 
         this.setTiles();// sets tiles board and with its pieces
 
