@@ -20,21 +20,19 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     //originator
 
     public class Memento {//memento inner class// state of game
-        ChessGame game;
-        ChessBoard board;
+        private ChessGame game;
+        private ChessBoard board;
         private Move lastMove;
         private boolean canWhiteCastleKingSide;
         private boolean canWhiteCastleQueenSide;
         private boolean canBlackCastleKingSide;
         private boolean canBlackCastleQueenSide;
-        
         private GameStatus gameStatus;
         private Player whoseTurn;
         //private constructor so not anyone can make a n obj
-        private  Memento(ChessGame game,ChessBoard board) 
+        private  Memento(ChessGame game) 
             {
-                this.game = game;
-                this.board = new ChessBoard(board);
+                this.board = new ChessBoard(game.getBoard());
                 this.lastMove = game.getLastMove();
                 this.canBlackCastleKingSide = game.canBlackCastleKingSide;
                 this.canBlackCastleQueenSide = game.canBlackCastleQueenSide;
@@ -62,7 +60,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     }
     public Memento returnState()
     {
-        return new Memento(this,board);
+        return new Memento(this);
     }
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());

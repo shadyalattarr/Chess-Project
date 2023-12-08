@@ -13,10 +13,7 @@ public class History {
     {
         this.game = game;
     }
-    public void pushToStack(Memento m)
-    {
-        movesHistory.push(m);
-    }
+    
     public void saveState()
     {
         movesHistory.push(game.returnState());
