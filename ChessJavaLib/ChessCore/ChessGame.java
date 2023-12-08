@@ -6,20 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
-public abstract class ChessGame {//originator -- will make a nested memento immutable class here
+public abstract class ChessGame {// originator -- will make a nested memento immutable class here
     private ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
+    private GameStatePublisher publisher = new GameStatePublisher();
     private Player whoseTurn = Player.WHITE;
     private Move lastMove;
     private boolean canWhiteCastleKingSide = true;
     private boolean canWhiteCastleQueenSide = true;
     private boolean canBlackCastleKingSide = true;
     private boolean canBlackCastleQueenSide = true;
-    
-    //originator
 
-    public class Memento {//memento inner class// state of game
+    // originator
+
+    public class Memento {// memento inner class// state of game
         private ChessGame game;
         private ChessBoard board;
         private Move lastMove;
@@ -29,39 +29,39 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         private boolean canBlackCastleQueenSide;
         private GameStatus gameStatus;
         private Player whoseTurn;
-        //private constructor so not anyone can make a n obj
-        private  Memento(ChessGame game) 
-            {
-                this.board = new ChessBoard(game.getBoard());
-                this.lastMove = game.getLastMove();
-                this.canBlackCastleKingSide = game.canBlackCastleKingSide;
-                this.canBlackCastleQueenSide = game.canBlackCastleQueenSide;
-                this.canWhiteCastleKingSide = game.canWhiteCastleKingSide;
-                this.canWhiteCastleQueenSide = game.canWhiteCastleQueenSide;
-                this.gameStatus = getGameStatus();
-                this.whoseTurn = getWhoseTurn();
-                
-            }
 
-        
+        // private constructor so not anyone can make a n obj
+        private Memento(ChessGame game) {
+            this.board = new ChessBoard(game.getBoard());
+            this.lastMove = game.getLastMove();
+            this.canBlackCastleKingSide = game.canBlackCastleKingSide;
+            this.canBlackCastleQueenSide = game.canBlackCastleQueenSide;
+            this.canWhiteCastleKingSide = game.canWhiteCastleKingSide;
+            this.canWhiteCastleQueenSide = game.canWhiteCastleQueenSide;
+            this.gameStatus = getGameStatus();
+            this.whoseTurn = getWhoseTurn();
+
+        }
+
     }
 
-    public void restore(Memento m)//restore game with the calling memento
+    public void restore(Memento m)// restore game with the calling memento
     {
-            this.board = m.board;
-            this.canBlackCastleKingSide = m.canBlackCastleKingSide;
-            this.canBlackCastleQueenSide = m.canBlackCastleQueenSide;
-            this.canWhiteCastleKingSide = m.canWhiteCastleKingSide;
-            this.canWhiteCastleQueenSide = m.canWhiteCastleQueenSide;
-            this.lastMove = m.lastMove;
-            this.whoseTurn = m.whoseTurn;
-            this.gameStatus = m.gameStatus;
-            //board.movesHistory.peek().lastMove;
+        this.board = m.board;
+        this.canBlackCastleKingSide = m.canBlackCastleKingSide;
+        this.canBlackCastleQueenSide = m.canBlackCastleQueenSide;
+        this.canWhiteCastleKingSide = m.canWhiteCastleKingSide;
+        this.canWhiteCastleQueenSide = m.canWhiteCastleQueenSide;
+        this.lastMove = m.lastMove;
+        this.whoseTurn = m.whoseTurn;
+        this.gameStatus = m.gameStatus;
+        // board.movesHistory.peek().lastMove;
     }
-    public Memento returnState()
-    {
+
+    public Memento returnState() {
         return new Memento(this);
     }
+
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());
     }
@@ -86,10 +86,12 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         if (board.getPieceAtSquare(move.getFromSquare()) instanceof Pawn) {
             BoardRank fromSquareRank = move.getFromSquare().getRank();
             BoardRank toSquareRank = move.getToSquare().getRank();
-            if ((fromSquareRank == BoardRank.SECOND && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.BLACK
-                    && toSquareRank == BoardRank.FIRST )
-                    || (fromSquareRank == BoardRank.SEVENTH && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.WHITE
-                        && toSquareRank == BoardRank.EIGHTH))
+            if ((fromSquareRank == BoardRank.SECOND
+                    && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.BLACK
+                    && toSquareRank == BoardRank.FIRST)
+                    || (fromSquareRank == BoardRank.SEVENTH
+                            && board.getPieceAtSquare(move.getFromSquare()).getOwner() == Player.WHITE
+                            && toSquareRank == BoardRank.EIGHTH))
                 return true;
         }
         return false;
@@ -130,6 +132,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     public boolean isTherePieceInBetween(Move move) {
         return board.isTherePieceInBetween(move);
     }
+
     public boolean hasPieceIn(Square square) {
         return board.getPieceAtSquare(square) != null;
     }
@@ -164,7 +167,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
         }
         return pieceName;
     }
-    
+
     public boolean makeMove(Move move) {
         if (!isValidMove(move)) {
             return false;
@@ -206,7 +209,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
                 move.getAbsDeltaX() == 1 &&
                 !hasPieceIn(move.getToSquare())) {
             board.setPieceAtSquare(lastMove.getToSquare(), null);
-            
+
         }
 
         // Promotion
@@ -318,6 +321,15 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
             gameStatus = GameStatus.INSUFFICIENT_MATERIAL;
         }
 
+        publisher.setStatus(gameStatus);
+    }
+
+    public void addGameStateObserver(GameStateObserver observer) {
+        publisher.addObserver(observer);
+    }
+
+    public void removeGameStateObserver(GameStateObserver observer) {
+        publisher.removeObserver(observer);
     }
 
     public GameStatus getGameStatus() {
