@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.xml.crypto.dsig.spec.HMACParameterSpec;
 
 public class ChessGUI extends JFrame {
     JFrame frame;
@@ -29,6 +30,7 @@ public class ChessGUI extends JFrame {
    // private String fileDestantion;
    private int fileNum,fileFix,rankNum,rankFix;
    int color =1;//statrt
+   History history;
    
     public void updateColor()
     {
@@ -62,6 +64,7 @@ public class ChessGUI extends JFrame {
     public ChessGUI() {
 
         this.game = new ClassicChessGame();
+        this.history = new History(game);
         // this.board = game.getBoard();
         this.fromSquare = null;
         this.toSquare = null;
@@ -89,8 +92,7 @@ public class ChessGUI extends JFrame {
                 // TODO Auto-generated method stub
                 if(a.getSource() == undoButton)
                     {
-                        game.undo();
-                    
+                        history.undo();                    
                         updateThem();
                         
                         boardPanel.removeAll();// fadi el frame // delted getContentPane().
@@ -142,7 +144,7 @@ public class ChessGUI extends JFrame {
                         // if(game.hasPieceIn(toSquare))
                         // JOptionPane.showMessageDialog(null, game.getPieceName(toSquare) + " IS
                         // CAPTURED");
-                        game.saveState();
+                        history.saveState();
                         
                         game.makeMove(move);// made move in board
                         //turn is black now and move is the whites move

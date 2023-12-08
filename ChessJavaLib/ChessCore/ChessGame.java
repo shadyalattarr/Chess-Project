@@ -11,14 +11,14 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     private ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
     private Player whoseTurn = Player.WHITE;
-    static Stack<Memento> movesHistory = new Stack<Memento>();
     private Move lastMove;
     private boolean canWhiteCastleKingSide = true;
     private boolean canWhiteCastleQueenSide = true;
     private boolean canBlackCastleKingSide = true;
     private boolean canBlackCastleQueenSide = true;
-    //originator
     
+    //originator
+
     public class Memento {//memento inner class// state of game
         ChessGame game;
         ChessBoard board;
@@ -49,7 +49,7 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
     }
 
     public void restore(Memento m)//restore game with the calling memento
-        {
+    {
             this.board = m.board;
             this.canBlackCastleKingSide = m.canBlackCastleKingSide;
             this.canBlackCastleQueenSide = m.canBlackCastleQueenSide;
@@ -59,27 +59,10 @@ public abstract class ChessGame {//originator -- will make a nested memento immu
             this.whoseTurn = m.whoseTurn;
             this.gameStatus = m.gameStatus;
             //board.movesHistory.peek().lastMove;
-        }
-    public void saveState()
-    {
-        movesHistory.push(
-            new Memento(this,board)
-        );
     }
-    public boolean undo()//pop restore
+    public Memento returnState()
     {
-        if(!movesHistory.empty())
-        {
-            System.out.println("Prev Size: "+ movesHistory.size());
-            System.out.println("We gonna restore");
-            restore(movesHistory.pop());
-            System.out.println("restor complete");
-            System.out.println("After Size: "+ movesHistory.size());
-
-            return true;
-        }
-
-        return false;
+        return new Memento(this,board);
     }
     protected ChessGame(BoardInitializer boardInitializer) {
         this.board = new ChessBoard(boardInitializer.initialize());
