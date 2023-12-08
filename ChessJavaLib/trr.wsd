@@ -1,0 +1,82 @@
+@startuml
+abstract class  Piece {
+  -owner: Player
+  #Piece(owner: Player)
+    +getOwner(): Player
+    +abstract isMoveValid(Move,ChessGame): boolean
++abstract boolean isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class Pawn {
+  -owner: Player
+  #Pawn(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class Rook {
+  -owner: Player
+  #Rook(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class Knight {
+  -owner: Player
+  #Knight(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class Bishop {
+  -owner: Player
+  #Bishop(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class Queen {
+  -owner: Player
+  #Queen(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+class King {
+  -owner: Player
+  #King(owner: Player)
+    +getOwner(): Player
+    +isMoveValid(Move,ChessGame): boolean
+    +isAttackingSquare(Square , Square, ChessBoard ): boolean
+}
+Piece <|-- Pawn
+Piece <|-- Rook
+Piece <|-- Knight
+Piece <|-- Bishop
+Piece <|-- Queen
+Piece <|-- King
+
+package Factory <<Rectangle>> {
+ abstract class PieceFactory {
+  +createPiece(PieceType, Player): Piece
+}
+enum PieceType {
+  PAWN
+  ROOK
+  KNIGHT
+  BISHOP
+  QUEEN
+  KING
+}
+class ClassicBoardInitializer{
+    -instance : BoardInitializer
+  +initialize(): void
+
+}
+PieceType o-- "*" PieceFactory:use
+Piece <-- PieceFactory :creats
+PieceFactory <-- ClassicBoardInitializer :use
+}
+
+
+
+@enduml

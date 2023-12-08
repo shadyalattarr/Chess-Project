@@ -2,7 +2,7 @@ package ChessCore;
 
 import ChessCore.Pieces.*;
 
-public class PieceFactory {
+public abstract class PieceFactory {
     public static Piece createPiece(PieceType type, Player player) {
         switch (type) {
             case PAWN:
