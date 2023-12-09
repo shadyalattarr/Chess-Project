@@ -60,7 +60,7 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
             Square checkdedKingSq = Utilities.getKingSquare(game.getWhoseTurn(), game.getBoard());
             int index = 8 * (rankNum - rankFix * checkdedKingSq.getRank().getValue())
                     + (fileNum - checkdedKingSq.getFile().getValue() * fileFix);// ith this need change?
-            JPanel panel = (JPanel) frame.getContentPane().getComponent(index);
+            JPanel panel = (JPanel) boardPanel.getComponent(index);
             panel.setBackground(new Color(255, 255, 134));
         }
     }
@@ -179,7 +179,7 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
                 }
 
                 if (game.isGameEnded()) {
-                 update(game.getGameStatus());
+                    update(game.getGameStatus());
                 }
 
             }

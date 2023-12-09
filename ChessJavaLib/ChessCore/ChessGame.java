@@ -7,6 +7,27 @@ import java.util.List;
 import java.util.Stack;
 
 public abstract class ChessGame {// originator -- will make a nested memento immutable class here
+    // +boolean isPawnPromotion(Move) : boolean
+    // +public isValidMove(Move) : boolean
+    // +getLastMove(): Move
+    // +getWhoseTurn() : Player
+    // +getBoard() : ChessBoard
+    // #abstract isValidMoveCore(Move): boolean
+    // +isTherePieceInBetween(Move):boolean
+    // +hasPieceIn(Square) : boolean
+    // +hasPieceInSquareForPlayer(Square,Player) : boolean
+    // +getPieceName(Square): String
+    // +makeMove(Move) : boolean
+    // +updateGameStatus() : void
+    // +addObserver(GameStateObserver) : void 
+    // +removeObserver(GameStateObserver) : void
+    // +notifyObservers() : void 
+    // +getGameStatus() : GameStatus 
+    // +isGameEnded() :  boolean 
+    // -isInsufficientMaterial() : boolean
+    // -hasAnyValidMoves() : boolean
+    // +getAllValidMovesFromSquare(Square)  : List<Square>
+    // +getPieceAtSquare(Square) : Piece
     private ChessBoard board;
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
    // private GameStatePublisher publisher = new GameStatePublisher();

@@ -1,0 +1,56 @@
+@startuml
+
++abstract class ChessGame{
+    -board:ChessBoard
+    -gameStatus: GameStatus  = GameStatus.IN_PROGRESS
+    -observers: List<GameStateObserver>
+    -whoseTurn : Player  = Player.WHITE
+    -lastMove : Move
+    -canWhiteCastleKingSide : boolean = true
+    -canWhiteCastleQueenSide: boolean = true
+    -canBlackCastleKingSide : boolean = true
+    -canBlackCastleQueenSide : boolean = true
+
+    #ChessGame(BoardInitializer) 
+    +restore(Memento) : void
+    +Memento returnState() : Memento    
+    +isCanWhiteCastleKingSide(): boolean
+    +isCanWhiteCastleQueenSide() : boolean
+    +isCanBlackCastleKingSide() : boolean
+    +isCanBlackCastleQueenSide() : boolean
+    
+}
++class Memento {
+        -game : ChessGame
+        -board:ChessBoard
+        -gameStatus: GameStatus 
+        -observers: List<GameStateObserver>
+        -whoseTurn : Player
+        -lastMove : Move
+        -canWhiteCastleKingSide : boolean 
+        -canWhiteCastleQueenSide: boolean
+        -canBlackCastleKingSide : boolean 
+        -canBlackCastleQueenSide : boolean 
+
+        -Memento(ChessGame)
+         
+
+}
++class History {
+    -game:ChessGame
+    -movesHistory : Stack<Memento>
+
+    +History(ChessGame)
+    +saveState() : void 
+    +undo(): boolean 
+    
+}
+-class ChessGUI{
+    -game:ClassicChessGame
+    history : History
+}
+ChessGame +- Memento
+History o-- ChessGame 
+ChessGUI *- History
+ChessGUI *-- ChessGame
+@enduml
