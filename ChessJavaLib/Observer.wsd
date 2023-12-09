@@ -1,0 +1,33 @@
+@startuml
+class ChessGame{
+    -gameStatus: GameStatus
+    -observers: List<GameStateObserver>
+    +updateGameStatus(): void
+    +getGameStatus(): GameStatus
+    +addObserver(GameStateObserver): void
+    +removeObserver(GameStateObserver): void
+    +isGameEnded(): boolean
+}
+interface GameStateObserver{
+    +update(gameStatus: GameStatus): void
+}
+enum GameStatus{
+    IN_PROGRESS
+    WHITE_WON
+    BLACK_WON
+    STALEMATE
+    WHITE_UNDER_CHECK
+    BLACK_UNDER_CHECK
+    INSUFFICIENT_MATERIAL
+}
+class ChessGUI{
+   - game : ChessGame
+   -status : GameStatus
+   update(gameStatus: GameStatus): void
+}
+
+GameStateObserver <|.. ChessGUI
+ChessGame o-- GameStateObserver
+ChessGame o-- GameStatus
+
+@enduml

@@ -31,6 +31,7 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
     private int fileNum, fileFix, rankNum, rankFix;
     int color = 1;// statrt
     History history;
+    private GameStatus status;
 
     public void updateColor() {
         if (this.color == 0)
@@ -81,12 +82,14 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
         boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
         JButton undoButton = new JButton("Undo");
+        
         // undoButton.setSize(80, 50);
         frame.add(boardPanel, BorderLayout.CENTER);
         frame.add(undoButton, BorderLayout.SOUTH);
         frame.setSize(8 * Square_Size, 8 * Square_Size + undoButton.getHeight());
         this.boardPanel.setSize(new Dimension(8 * Square_Size, 8 * Square_Size));
         game.addObserver(this);
+        status = game.getGameStatus();
 
         this.setTiles();// sets tiles board and with its pieces
 
@@ -179,7 +182,7 @@ public class ChessGUI extends JFrame implements GameStateObserver    {
                 }
 
                 if (game.isGameEnded()) {
-                    update(game.getGameStatus());
+                    update(status);
                 }
 
             }
