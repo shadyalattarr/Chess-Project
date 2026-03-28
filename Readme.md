@@ -1,2 +1,6 @@
-NOTE the backend we implemented as a team is in chess\com\company\chesscore
-we were provided with another backend, that we used in ChessJavaLib
+### Backend Implementations
+
+This project utilizes two distinct backend implementations for the chess core:
+
+* **Team Implementation (`chess\com\company\chesscore`):** A custom backend developed from scratch by our team.
+* **TA Implementation (`ChessJavaLib`):** An alternative backend provided by the Teaching Assistants.
